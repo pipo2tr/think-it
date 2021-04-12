@@ -1,3 +1,3 @@
-"# think-it" 
+# think-it
 
-# A simple full stack web app
+## A simple full stack web app

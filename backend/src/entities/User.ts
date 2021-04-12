@@ -16,16 +16,16 @@ export class User extends BaseEntity {
 	id!: number;
 
 	@Field()
-	@Column()
+	@Column({ unique: true })
 	username!: string;
 
 	@Column()
 	password!: string;
 
 	@Field()
-	@Column()
-	email!: string	
-		
+	@Column({ unique: true })
+	email!: string;
+
 	@Field(() => Date)
 	@CreateDateColumn()
 	createdAt: string;

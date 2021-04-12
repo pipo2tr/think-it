@@ -5,8 +5,8 @@ import { UserRegisterType } from "../utils/UserRegisterType";
 import argon2 from "argon2";
 import { GraphQlCxt } from "../types/GraphQlCtx";
 import { UserResponse } from "../utils/Error&ResponseType";
-import { registerValidator } from "src/utils/registorValidator";
-import { UserLoginType } from "src/utils/UserLoginType";
+import { registerValidator } from "../utils/registorValidator";
+import { UserLoginType } from "../utils/UserLoginType";
 @Resolver()
 export class UserResolver {
 	// returns the current logged in user

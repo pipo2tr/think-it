@@ -16,6 +16,7 @@ export class PostResolver {
 		return Post.create({ text }).save();
 	}
 
+	// update post
 	@Mutation(() => Post, { nullable: true })
 	async updatePost(
 		@Arg("id", () => Int) id: number,
@@ -34,6 +35,7 @@ export class PostResolver {
 		return post.raw[0];
 	}
 
+	// delete post
 	@Mutation(() => Boolean)
 	async deletePost(@Arg("id") id: number): Promise<boolean> {
 		const post = Post.findOne(id);

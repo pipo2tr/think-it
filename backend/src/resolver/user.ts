@@ -7,6 +7,7 @@ import { GraphQlCxt } from "../types/GraphQlCtx";
 import { UserResponse } from "../utils/Error&ResponseType";
 import { registerValidator } from "../utils/registorValidator";
 import { UserLoginType } from "../utils/UserLoginType";
+import { COOKIE_NAME } from "../consts";
 @Resolver()
 export class UserResolver {
 	// returns the current logged in user
@@ -135,5 +136,21 @@ export class UserResolver {
 
 		req.session.userId = user.id;
 		return { user };
+	}
+
+	// logout user
+	@Mutation(() => Boolean)
+	async logout(@Ctx() { req, res }: GraphQlCxt) {
+		return new Promise((resolve) =>
+			req.session.destroy((err) => {
+				if (err) {
+					console.log(err);
+					resolve(false);
+					return;
+				}
+				res.clearCookie(COOKIE_NAME);
+				resolve(true);
+			})
+		);
 	}
 }

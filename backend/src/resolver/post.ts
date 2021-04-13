@@ -23,12 +23,17 @@ export class PostResolver {
 	creator(@Root() post: Post) {
 		return UserLoader.load(post.creatorId);
 	}
-
+	
 	@Query(() => [Post])
-	async myPosts(@Ctx(){req}: GraphQlCxt) :Promise<Post[] | undefined>{
+	@UseMiddleware(isAuthenticated)
+	async myPosts(@Ctx() { req }: GraphQlCxt): Promise<Post[] | undefined>{
 		return Post.find({where: {creatorId: req.session.userId}})
 	}	
 
+	@Query(() => [Post])
+	async postFromCreator(@Arg("id", () => Int) id: number): Promise<Post[] | undefined>	{
+		return Post.find({where: {creatorId: id}})
+	}
 	// Get one post
 	@Query(() => Post, { nullable: true })
 	async post(@Arg("id", () => Int) id: number): Promise<Post | undefined> {

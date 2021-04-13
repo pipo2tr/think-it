@@ -19,11 +19,11 @@ import { COOKIE_NAME } from "../consts";
 export class UserResolver {
 	// returns the current logged in user
 	@Query(() => User, { nullable: true })
-	async loggedInUser(@Ctx() { req }: GraphQlCxt): Promise<User | undefined> {
+	async me(@Ctx() { req }: GraphQlCxt): Promise<User | undefined> {
 		if (!req.session.userId) {
 			return undefined;
 		} else {
-			return User.findOne({ where: { id: req.session.userId } });
+			return User.findOne(req.session.userId);
 		}
 	}
 

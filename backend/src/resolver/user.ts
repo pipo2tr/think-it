@@ -1,5 +1,12 @@
 import { User } from "../entities/User";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+	Arg,
+	Ctx,
+	Mutation,
+	Query,
+	Resolver,
+	Root,
+} from "type-graphql";
 import { getConnection } from "typeorm";
 import { UserRegisterType } from "../utils/UserRegisterType";
 import argon2 from "argon2";
@@ -8,7 +15,7 @@ import { UserResponse } from "../utils/Error&ResponseType";
 import { registerValidator } from "../utils/registorValidator";
 import { UserLoginType } from "../utils/UserLoginType";
 import { COOKIE_NAME } from "../consts";
-@Resolver()
+@Resolver(User)
 export class UserResolver {
 	// returns the current logged in user
 	@Query(() => User, { nullable: true })

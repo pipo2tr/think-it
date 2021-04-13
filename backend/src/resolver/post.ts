@@ -2,18 +2,33 @@ import { Post } from "../entities/Post";
 import {
 	Arg,
 	Ctx,
+	FieldResolver,
 	Int,
 	Mutation,
 	Query,
 	Resolver,
+	Root,
 	UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { GraphQlCxt } from "../types/GraphQlCtx";
 import { isAuthenticated } from "../middleware/isAuthenticated";
+import { User } from "../entities/User";
+import { UserLoader } from "../utils/UserLoader";
 
-@Resolver()
+@Resolver(Post)
 export class PostResolver {
+	// fetch creator data
+	@FieldResolver(() => User)
+	creator(@Root() post: Post) {
+		return UserLoader.load(post.creatorId);
+	}
+
+	@Query(() => [Post])
+	async myPosts(@Ctx(){req}: GraphQlCxt) :Promise<Post[] | undefined>{
+		return Post.find({where: {creatorId: req.session.userId}})
+	}	
+
 	// Get one post
 	@Query(() => Post, { nullable: true })
 	async post(@Arg("id", () => Int) id: number): Promise<Post | undefined> {

@@ -5,7 +5,6 @@ import {
 	Mutation,
 	Query,
 	Resolver,
-	Root,
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { UserRegisterType } from "../utils/UserRegisterType";

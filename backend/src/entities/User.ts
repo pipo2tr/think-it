@@ -37,5 +37,5 @@ export class User extends BaseEntity {
 
 	@Field(() => Date)
 	@UpdateDateColumn()
-	updatedAt: boolean;
+	updatedAt: string;
 }

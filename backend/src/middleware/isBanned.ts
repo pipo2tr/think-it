@@ -9,7 +9,7 @@ export const isBanned: MiddlewareFn<GraphQlCxt> = async (
 ): Promise<any> => {
 	const user = await User.findOne(context.req.session.userId);
 	if (user?.role === Role.BANNED) {
-		throw new Error("This username is banned, please contact the owner.");
+		throw new Error("This username is banned, please contact an Admin.");
 	}
 	return next();
 };

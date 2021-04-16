@@ -169,8 +169,7 @@ export class UserResolver {
 	// Ban a user so they can only read posts.
 	@Mutation(() => UserResponse)
 	@UseMiddleware(isAuthenticated)
-	@UseMiddleware(isAdmin)	
-	@UseMiddleware(isOwner)
+	@UseMiddleware(isAdmin)
 	async ban(@Arg("id") id: number): Promise<UserResponse> {
 		const user = await User.findOne(id);
 
@@ -306,38 +305,75 @@ export class UserResolver {
 		return { user: roled.raw[0] };
 	}
 
-	// Delete user, can only be performed by Owner
-	@Mutation(() => FieldError || Boolean)
+	@Mutation(() => UserResponse)
 	@UseMiddleware(isAuthenticated)
 	@UseMiddleware(isOwner)
-	async admin_deleteUser(
+	async makeOwner(
 		@Arg("id") id: number
-	): Promise<FieldError | Boolean> {
+	): Promise<UserResponse> {
 		const user = await User.findOne(id);
 
 		if (!user) {
 			return {
-				field: "user",
-				message: "User doesn't exist",
+				errors: [
+					{
+						field: "user",
+						message: "user doesn't exist",
+					},
+				],
 			};
 		}
-		else if (user.role === Role.ADMIN) {
+		else if (user.role === Role.OWNER) {
 			return {
-				field: "user",
-				message: "Cannot delete user with owner role",
+				errors: [
+					{
+						field: "role",
+						message:
+							"the following user is already an admin or owner",
+					},
+				],
 			};
 		}
-		User.delete({ id });
+
+		const roled = await getConnection()
+			.createQueryBuilder()
+			.update(User)
+			.set({ role: Role.OWNER })
+			.where("id = :id", {
+				id,
+			})
+			.returning("*")
+			.execute();
+
+		return { user: roled.raw[0] };
+	}
+
+	// Delete user, can only be performed by Owner
+	@Mutation(() => Boolean)
+	@UseMiddleware(isAuthenticated)
+	@UseMiddleware(isOwner)
+	async admin_deleteUser(
+		@Arg("id") id: number
+	): Promise<Boolean> {
+		const user = await User.findOne(id);
+
+		if (!user) {
+			return false
+		}
+		else if (user.role === Role.OWNER) {
+			return false
+		}
 		Post.delete({ creatorId: id });
-		return true;
+		User.delete({ id });
+		return true
 	}
 
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuthenticated)
 	async deleteMe(@Ctx() { req, res }: GraphQlCxt): Promise<Boolean> {
 		const userId = req.session.userId;
-		User.delete({ id: userId });
 		Post.delete({ creatorId: userId });
+		User.delete({ id: userId });
 		return new Promise((resolve) =>
 			req.session.destroy((err) => {
 				if (err) {

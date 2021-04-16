@@ -1,7 +1,7 @@
 import { User } from "../entities/User";
 import { MiddlewareFn } from "type-graphql";
 import { GraphQlCxt } from "../types/GraphQlCtx";
-import { Role } from "src/enums/Role";
+import { Role } from "../enums/Role";
 
 export const isOwner: MiddlewareFn<GraphQlCxt> = async (
 	{ context },

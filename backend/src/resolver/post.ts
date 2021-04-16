@@ -15,6 +15,7 @@ import { GraphQlCxt } from "../types/GraphQlCtx";
 import { isAuthenticated } from "../middleware/isAuthenticated";
 import { User } from "../entities/User";
 import { UserLoader } from "../utils/UserLoader";
+import { isBanned } from "../middleware/isBanned";
 
 @Resolver(Post)
 export class PostResolver {
@@ -31,6 +32,7 @@ export class PostResolver {
 	}	
 
 	@Query(() => [Post])
+	@UseMiddleware(isBanned)
 	async postFromCreator(@Arg("id", () => Int) id: number): Promise<Post[] | undefined>	{
 		return Post.find({where: {creatorId: id}})
 	}
@@ -47,6 +49,8 @@ export class PostResolver {
 
 	// create post
 	@Mutation(() => Post)
+	@UseMiddleware(isAuthenticated)
+	@UseMiddleware(isBanned)
 	async createPost(
 		@Arg("text") text: string,
 		@Ctx() { req }: GraphQlCxt
@@ -57,6 +61,7 @@ export class PostResolver {
 	// update post
 	@Mutation(() => Post, { nullable: true })
 	@UseMiddleware(isAuthenticated)
+	@UseMiddleware(isBanned)
 	async updatePost(
 		@Arg("id", () => Int) id: number,
 		@Arg("text") text: string,
@@ -81,6 +86,7 @@ export class PostResolver {
 	// delete post
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuthenticated)
+	@UseMiddleware(isBanned)
 	async deletePost(
 		@Arg("id") id: number,
 		@Ctx() { req }: GraphQlCxt

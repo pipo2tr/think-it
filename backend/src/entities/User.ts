@@ -1,12 +1,13 @@
+import { Role } from "../enums/Role";
 import { Field, ObjectType } from "type-graphql";
 import {
-	Entity,
-	PrimaryGeneratedColumn,
-	Column,
 	BaseEntity,
+	Column,
 	CreateDateColumn,
-	UpdateDateColumn,
+	Entity,
 	OneToMany,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
 } from "typeorm";
 import { Post } from "./Post";
 
@@ -30,6 +31,10 @@ export class User extends BaseEntity {
 
 	@OneToMany(() => Post, (post) => post.creator)
 	posts: Post[];
+
+	@Field()
+	@Column({ type: "enum", default: Role.USER, enum:Role })
+	role!: Role;
 
 	@Field(() => Date)
 	@CreateDateColumn()

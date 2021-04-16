@@ -1,19 +1,25 @@
-import { User } from "../entities/User";
+import argon2 from "argon2";
+import { Role } from "../enums/Role";
 import {
 	Arg,
 	Ctx,
 	Mutation,
 	Query,
 	Resolver,
+	UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import { UserRegisterType } from "../utils/UserRegisterType";
-import argon2 from "argon2";
+import { COOKIE_NAME } from "../consts";
+import { Post } from "../entities/Post";
+import { User } from "../entities/User";
+import { isAuthenticated } from "../middleware/isAuthenticated";
+import { isOwner } from "../middleware/isOwner";
 import { GraphQlCxt } from "../types/GraphQlCtx";
-import { UserResponse } from "../utils/Error&ResponseType";
+import { FieldError, UserResponse } from "../utils/Error&ResponseType";
 import { registerValidator } from "../utils/registorValidator";
 import { UserLoginType } from "../utils/UserLoginType";
-import { COOKIE_NAME } from "../consts";
+import { UserRegisterType } from "../utils/UserRegisterType";
+import { isAdmin } from "../middleware/isAdmin";
 @Resolver(User)
 export class UserResolver {
 	// returns the current logged in user
@@ -119,7 +125,7 @@ export class UserResolver {
 				errors: [
 					{
 						field: "usernameOremail",
-						message: "User with that name or email dosen't exist",
+						message: "User with that name or email doesn't exist",
 					},
 				],
 			};
@@ -147,6 +153,191 @@ export class UserResolver {
 	// logout user
 	@Mutation(() => Boolean)
 	async logout(@Ctx() { req, res }: GraphQlCxt) {
+		return new Promise((resolve) =>
+			req.session.destroy((err) => {
+				if (err) {
+					console.log(err);
+					resolve(false);
+					return;
+				}
+				res.clearCookie(COOKIE_NAME);
+				resolve(true);
+			})
+		);
+	}
+
+	// Ban a user so they can only read posts.
+	@Mutation(() => UserResponse)
+	@UseMiddleware(isAuthenticated)
+	@UseMiddleware(isAdmin)	
+	@UseMiddleware(isOwner)
+	async ban(@Arg("id") id: number): Promise<UserResponse> {
+		const user = await User.findOne(id);
+
+		if (!user) {
+			return {
+				errors: [
+					{
+						field: "user",
+						message: "user doesn't exist",
+					},
+				],
+			};
+		}
+		else if (user.role === Role.OWNER) {
+			return {
+				errors: [
+					{
+						field: "ban",
+						message: "lol, cannot ban owner",
+					},
+				],
+			};
+		}
+		else if (user.role === Role.BANNED) {
+			return {
+				errors: [
+					{
+						field: "ban",
+						message: "user already banned",
+					},
+				],
+			};
+		}
+
+		const banned = await getConnection()
+			.createQueryBuilder()
+			.update(User)
+			.set({ role: Role.BANNED })
+			.where("id = :id", {
+				id,
+			})
+			.returning("*")
+			.execute();
+
+		console.log("Banned user :", banned.raw[0]);
+		return { user: banned.raw[0] };
+	}
+
+	// Unban a user so they can post.
+	@Mutation(() => UserResponse)
+	@UseMiddleware(isAuthenticated)
+	@UseMiddleware(isAdmin)
+	@UseMiddleware(isOwner)
+	async unban(@Arg("id") id: number): Promise<UserResponse> {
+		const user = await User.findOne(id);
+
+		if (!user) {
+			return {
+				errors: [
+					{
+						field: "user",
+						message: "user doesn't exist",
+					},
+				],
+			};
+		}
+		else if (user.role !== Role.BANNED) {
+			return {
+				errors: [
+					{
+						field: "ban",
+						message: "user already not banned",
+					},
+				],
+			};
+		}
+
+		const banned = await getConnection()
+			.createQueryBuilder()
+			.update(User)
+			.set({ role: Role.USER })
+			.where("id = :id", {
+				id,
+			})
+			.returning("*")
+			.execute();
+
+		console.log("Unbanned user :", banned.raw[0]);
+		return { user: banned.raw[0] };
+	}
+
+	// Change user role
+	@Mutation(() => UserResponse)
+	@UseMiddleware(isAuthenticated)
+	@UseMiddleware(isOwner)
+	async makeAdmin(
+		@Arg("id") id: number
+	): Promise<UserResponse> {
+		const user = await User.findOne(id);
+
+		if (!user) {
+			return {
+				errors: [
+					{
+						field: "user",
+						message: "user doesn't exist",
+					},
+				],
+			};
+		}
+		else if (user.role === Role.ADMIN || user.role === Role.OWNER) {
+			return {
+				errors: [
+					{
+						field: "role",
+						message:
+							"the following user is already an admin or owner",
+					},
+				],
+			};
+		}
+
+		const roled = await getConnection()
+			.createQueryBuilder()
+			.update(User)
+			.set({ role: Role.ADMIN })
+			.where("id = :id", {
+				id,
+			})
+			.returning("*")
+			.execute();
+
+		return { user: roled.raw[0] };
+	}
+
+	// Delete user, can only be performed by Owner
+	@Mutation(() => FieldError || Boolean)
+	@UseMiddleware(isAuthenticated)
+	@UseMiddleware(isOwner)
+	async admin_deleteUser(
+		@Arg("id") id: number
+	): Promise<FieldError | Boolean> {
+		const user = await User.findOne(id);
+
+		if (!user) {
+			return {
+				field: "user",
+				message: "User doesn't exist",
+			};
+		}
+		else if (user.role === Role.ADMIN) {
+			return {
+				field: "user",
+				message: "Cannot delete user with owner role",
+			};
+		}
+		User.delete({ id });
+		Post.delete({ creatorId: id });
+		return true;
+	}
+
+	@Mutation(() => Boolean)
+	@UseMiddleware(isAuthenticated)
+	async deleteMe(@Ctx() { req, res }: GraphQlCxt): Promise<Boolean> {
+		const userId = req.session.userId;
+		User.delete({ id: userId });
+		Post.delete({ creatorId: userId });
 		return new Promise((resolve) =>
 			req.session.destroy((err) => {
 				if (err) {

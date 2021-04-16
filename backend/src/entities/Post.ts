@@ -40,4 +40,5 @@ export class Post extends BaseEntity {
 	@Field(() => Date)
 	@UpdateDateColumn()
 	updatedAt: string;
+
 }

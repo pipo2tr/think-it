@@ -15,7 +15,7 @@ import { User } from "../entities/User";
 import { isAuthenticated } from "../middleware/isAuthenticated";
 import { isOwner } from "../middleware/isOwner";
 import { GraphQlCxt } from "../types/GraphQlCtx";
-import { FieldError, UserResponse } from "../utils/Error&ResponseType";
+import { UserResponse } from "../utils/Error&ResponseType";
 import { registerValidator } from "../utils/registorValidator";
 import { UserLoginType } from "../utils/UserLoginType";
 import { UserRegisterType } from "../utils/UserRegisterType";

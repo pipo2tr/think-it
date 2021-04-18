@@ -11,6 +11,7 @@ import session from "express-session";
 import connsectRedis from "connect-redis";
 import { UserResolver } from "./resolver/user";
 import { User } from "./entities/User";
+import cors from "cors";
 const main = async () => {
 	const dbConnect = await createConnection({
 		type: "postgres",
@@ -26,6 +27,7 @@ const main = async () => {
 	let redis = new Redis();
 
 	const app = express();
+
 	app.use(
 		session({
 			name: COOKIE_NAME,
@@ -41,6 +43,9 @@ const main = async () => {
 			saveUninitialized: false,
 		})
 	);
+
+	app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({
 			resolvers: [TestResolver, PostResolver, UserResolver],
@@ -52,7 +57,7 @@ const main = async () => {
 			redis,
 		}),
 	});
-	apolloServer.applyMiddleware({ app });
+	apolloServer.applyMiddleware({ app, cors: false });
 	app.listen(5000, () => {
 		console.log("listening on http://localhost:5000/graphql");
 	});

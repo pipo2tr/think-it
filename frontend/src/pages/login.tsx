@@ -2,14 +2,14 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { useFormik } from "formik";
+import Link from "next/link";
 import React from "react";
-import Layout from "../src/components/Layout";
+import Layout from "../components/Layout";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -31,13 +31,12 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function register() {
+export default function login() {
 	const classes = useStyles();
 	const formik = useFormik({
-        initialValues: {
-            username:"",
-			email: "",
-			password: "",
+		initialValues: {
+			email: "foobar@example.com",
+			password: "foobar",
 		},
         onSubmit: (values, {setErrors}) => {
 			alert(JSON.stringify(values, null, 2));
@@ -54,26 +53,6 @@ export default function register() {
 						Sign in
 					</Typography>
 					<form className={classes.form} noValidate onSubmit={formik.handleSubmit}>
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="username"
-							label="User Name"
-							name="username"
-							autoComplete="username"
-							autoFocus
-							value={formik.values.username}
-							onChange={formik.handleChange}
-							error={
-								formik.touched.username &&
-								Boolean(formik.errors.username)
-							}
-							helperText={
-								formik.touched.username && formik.errors.username
-							}
-						/>
 						<TextField
 							variant="outlined"
 							margin="normal"
@@ -104,14 +83,14 @@ export default function register() {
 							type="password"
 							id="password"
 							autoComplete="current-password"
-							value={formik.values.password}
+							value={formik.values.email}
 							onChange={formik.handleChange}
 							error={
-								formik.touched.password &&
-								Boolean(formik.errors.password)
+								formik.touched.email &&
+								Boolean(formik.errors.email)
 							}
 							helperText={
-								formik.touched.password && formik.errors.password
+								formik.touched.email && formik.errors.email
 							}
 						/>
 						<Button
@@ -125,12 +104,12 @@ export default function register() {
 						</Button>
 						<Grid container>
 							<Grid item xs>
-								<Link href="#" variant="body2">
+								<Link href="/forgot-password">
 									Forgot password?
 								</Link>
 							</Grid>
 							<Grid item>
-								<Link href="#" variant="body2">
+								<Link href="/register">
 									{"Don't have an account? Sign Up"}
 								</Link>
 							</Grid>

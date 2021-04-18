@@ -31,7 +31,7 @@ export default function NavBar() {
 	}, []);
 	return (
 		<div className={classes.root}>
-			<AppBar position="fixed" color="transparent">
+			<AppBar position="fixed" color="primary">
 				<Toolbar>
 					<IconButton
 						edge="start"

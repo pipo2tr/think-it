@@ -1,3 +1,4 @@
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { CssBaseline } from "@material-ui/core";
 import Head from "next/head";
 import React, { useEffect } from "react";
@@ -11,13 +12,20 @@ function MyApp({ Component, pageProps }) {
 			jssStyles.parentElement.removeChild(jssStyles);
 		}
 	}, []);
+
+	const client = new ApolloClient({
+		uri: "http://localhost:5000/graphql",
+		cache: new InMemoryCache(),
+		credentials: "include"
+	});
 	return (
-		<>
+		<>	<ApolloProvider client={client}>
 			<Head>
 				<title>ThinkIt!</title>
-      </Head>
-      <CssBaseline />
+			</Head>
+			<CssBaseline />
 			<Component {...pageProps} />
+			</ApolloProvider>
 		</>
 	);
 }

@@ -1,15 +1,15 @@
 import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
+import Link from "next/link";
 import React from "react";
 import Layout from "../components/Layout";
-import Link from "next/link";
 import { useRegisterMutation } from "../generated/graphql";
 import { mapError } from "../utils/mapError";
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function register() {
-	const [register, {loading}] = useRegisterMutation()
+	const [register, { loading }] = useRegisterMutation();
 
 	const classes = useStyles();
 	const formik = useFormik({
@@ -43,10 +43,10 @@ export default function register() {
 			password: "",
 		},
 		onSubmit: async (values, { setErrors }) => {
-			const res = await register({ variables: { input: values } })
+			const res = await register({ variables: { input: values } });
 			if (res.data.register.errors) {
 				console.log(mapError(res.data.register.errors));
-				 setErrors(mapError(res.data.register.errors))
+				setErrors(mapError(res.data.register.errors));
 			}
 		},
 	});
@@ -126,7 +126,8 @@ export default function register() {
 								formik.errors.password
 							}
 						/>
-						<Button
+						<LoadingButton
+							pending={loading}
 							type="submit"
 							fullWidth
 							variant="contained"
@@ -134,7 +135,7 @@ export default function register() {
 							className={classes.submit}
 						>
 							Register
-						</Button>
+						</LoadingButton>
 						<Grid container>
 							<Grid item xs>
 								<Link href="/forgot-password">

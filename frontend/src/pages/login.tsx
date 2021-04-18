@@ -1,15 +1,17 @@
 import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import Link from "next/link";
 import React from "react";
 import Layout from "../components/Layout";
+import { useLoginMutation } from "../generated/graphql";
+import { mapError } from "../utils/mapError";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -32,14 +34,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function login() {
+
+	const [login, {loading}] = useLoginMutation()
+
 	const classes = useStyles();
 	const formik = useFormik({
 		initialValues: {
-			email: "foobar@example.com",
-			password: "foobar",
+			usernameOremail: "",
+			password: "",
 		},
-        onSubmit: (values, {setErrors}) => {
-			alert(JSON.stringify(values, null, 2));
+        onSubmit: async (values, {setErrors}) => {
+			const res = await login({
+				variables: {
+				input: values
+				}
+			})
+			if (res.data.login.errors) {
+				setErrors(mapError(res.data.login.errors))
+			}
 		},
 	});
 	return (
@@ -52,25 +64,25 @@ export default function login() {
 					<Typography component="h1" variant="h5">
 						Sign in
 					</Typography>
-					<form className={classes.form} noValidate onSubmit={formik.handleSubmit}>
+					<form className={classes.form} onSubmit={formik.handleSubmit}>
 						<TextField
 							variant="outlined"
 							margin="normal"
 							required
 							fullWidth
-							id="email"
-							label="Email Address"
-							name="email"
-							autoComplete="email"
+							id="usernameOremail"
+							label="Username Or Email"
+							name="usernameOremail"
+							autoComplete="usernameOremail"
 							autoFocus
-							value={formik.values.email}
+							value={formik.values.usernameOremail}
 							onChange={formik.handleChange}
 							error={
-								formik.touched.email &&
-								Boolean(formik.errors.email)
+								formik.touched.usernameOremail &&
+								Boolean(formik.errors.usernameOremail)
 							}
 							helperText={
-								formik.touched.email && formik.errors.email
+								formik.touched.usernameOremail && formik.errors.usernameOremail
 							}
 						/>
 						<TextField
@@ -83,25 +95,26 @@ export default function login() {
 							type="password"
 							id="password"
 							autoComplete="current-password"
-							value={formik.values.email}
+							value={formik.values.password}
 							onChange={formik.handleChange}
 							error={
-								formik.touched.email &&
-								Boolean(formik.errors.email)
+								formik.touched.password &&
+								Boolean(formik.errors.password)
 							}
 							helperText={
-								formik.touched.email && formik.errors.email
+								formik.touched.password && formik.errors.password
 							}
 						/>
-						<Button
+						<LoadingButton
+							pending={loading}
 							type="submit"
 							fullWidth
 							variant="contained"
 							color="primary"
 							className={classes.submit}
 						>
-							Sign In
-						</Button>
+							Login
+						</LoadingButton>
 						<Grid container>
 							<Grid item xs>
 								<Link href="/forgot-password">

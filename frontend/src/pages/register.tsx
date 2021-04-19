@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import Link from "next/link";
@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
+	link: {
+		cursor: "pointer",
+		color: theme.palette.primary.dark
+	}
 }));
 
 export default function register() {
@@ -55,7 +59,7 @@ export default function register() {
 			<Container component="main" maxWidth="xs">
 				<div className={classes.paper}>
 					<Avatar className={classes.avatar}>
-						<LockOutlinedIcon />
+						<PersonAddIcon />
 					</Avatar>
 					<Typography component="h1" variant="h5">
 						Register
@@ -139,12 +143,24 @@ export default function register() {
 						<Grid container>
 							<Grid item xs>
 								<Link href="/forgot-password">
-									Forgot password?
+									<Typography
+										component="p"
+										variant="subtitle2"
+										className={classes.link}
+									>
+										Forgot password?
+									</Typography>
 								</Link>
 							</Grid>
 							<Grid item>
 								<Link href="/login">
-									Already have an account? Sign in
+									<Typography
+										component="p"
+										variant="subtitle2"
+										className={classes.link}
+									>
+										Already have an account? Sign in
+									</Typography>
 								</Link>
 							</Grid>
 						</Grid>

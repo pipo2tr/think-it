@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
+	link: {
+		cursor: "pointer",
+		color: theme.palette.primary.dark
+	}
 }));
 
 export default function login() {
@@ -118,12 +122,24 @@ export default function login() {
 						<Grid container>
 							<Grid item xs>
 								<Link href="/forgot-password">
-									Forgot password?
+								<Typography
+											component="p"
+											variant="subtitle2"
+											className={classes.link}
+										>
+										Forgot password?
+								</Typography>
 								</Link>
 							</Grid>
 							<Grid item>
 								<Link href="/register">
-									{"Don't have an account? Sign Up"}
+								<Typography
+											component="p"
+											variant="subtitle2"
+											className={classes.link}
+										>
+										Don't have an account? Sign Up
+								</Typography>
 								</Link>
 							</Grid>
 						</Grid>

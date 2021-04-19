@@ -3,13 +3,15 @@ import { Role } from "../enums/Role";
 import {
 	Arg,
 	Ctx,
+	FieldResolver,
 	Mutation,
 	Query,
 	Resolver,
+	Root,
 	UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import { COOKIE_NAME } from "../consts";
+import { COOKIE_NAME, PASSWORD_PREFIX } from "../consts";
 import { Post } from "../entities/Post";
 import { User } from "../entities/User";
 import { isAuthenticated } from "../middleware/isAuthenticated";
@@ -20,6 +22,10 @@ import { registerValidator } from "../utils/registorValidator";
 import { UserLoginType } from "../utils/UserLoginType";
 import { UserRegisterType } from "../utils/UserRegisterType";
 import { isAdmin } from "../middleware/isAdmin";
+import { v4 } from "uuid";
+import { sendEmail } from "../utils/sendEmail";
+import { passwordValidator } from "../utils/passwordValidator";
+
 @Resolver(User)
 export class UserResolver {
 	// returns the current logged in user
@@ -30,6 +36,15 @@ export class UserResolver {
 		} else {
 			return User.findOne(req.session.userId);
 		}
+	}
+
+	// prevents other users to see someone eles' email
+	@FieldResolver(() => String)
+	email(@Root() user: User, @Ctx() { req }: GraphQlCxt) {
+		if (req.session.userId === user.id) {
+			return user.email;
+		}
+		return "";
 	}
 
 	// create user
@@ -166,6 +181,63 @@ export class UserResolver {
 		);
 	}
 
+	// Generate a token for a user that requests for password change
+	@Mutation(() => Boolean)
+	async forgotPassword(
+		@Arg("email") email: string,
+		@Ctx() { redis }: GraphQlCxt
+	): Promise<Boolean> {
+		const user = await User.findOne({ where: { email } });
+		if (!user) {
+			return true;
+		}
+		const token = v4();
+
+		await redis.set(
+			PASSWORD_PREFIX + token,
+			user.id,
+			"ex",
+			1000 * 60 * 60 * 2 // two hours
+		);
+
+		const html = `<p>visit the following <a href="http://localhost:3000/change-password/${token}">link to reset password</a></p>`;
+		await sendEmail(user.email, html);
+		return true;
+	}
+
+	// validate token and change password
+	@Mutation(() => UserResponse)
+	async changePassword(
+		@Arg("token") token: string,
+		@Arg("newPassword") newPassword: string,
+		@Ctx() { redis }: GraphQlCxt
+	): Promise<UserResponse> {
+		const errors = passwordValidator(newPassword);
+		if (errors) {
+			return { errors };
+		}
+		const key = PASSWORD_PREFIX + token;
+		const userIdStr = await redis.get(key);
+		if (!userIdStr) {
+			return {
+				errors: [{ field: "token", message: "token expired" }],
+			};
+		}
+		const userId = parseInt(userIdStr);
+		const user = await User.findOne(userId);
+		if (!user) {
+			return {
+				errors: [{ field: "token", message: "user no longer exists" }],
+			};
+		}
+		const hashedPassword = await argon2.hash(newPassword);
+		await User.update({ id: userId }, { password: hashedPassword });
+
+		await redis.del(key);
+
+		return { user };
+	}
+
 	// Ban a user so they can only read posts.
 	@Mutation(() => UserResponse)
 	@UseMiddleware(isAuthenticated)
@@ -182,8 +254,7 @@ export class UserResolver {
 					},
 				],
 			};
-		}
-		else if (user.role === Role.OWNER) {
+		} else if (user.role === Role.OWNER) {
 			return {
 				errors: [
 					{
@@ -192,8 +263,7 @@ export class UserResolver {
 					},
 				],
 			};
-		}
-		else if (user.role === Role.BANNED) {
+		} else if (user.role === Role.BANNED) {
 			return {
 				errors: [
 					{
@@ -235,8 +305,7 @@ export class UserResolver {
 					},
 				],
 			};
-		}
-		else if (user.role !== Role.BANNED) {
+		} else if (user.role !== Role.BANNED) {
 			return {
 				errors: [
 					{
@@ -265,9 +334,7 @@ export class UserResolver {
 	@Mutation(() => UserResponse)
 	@UseMiddleware(isAuthenticated)
 	@UseMiddleware(isOwner)
-	async makeAdmin(
-		@Arg("id") id: number
-	): Promise<UserResponse> {
+	async makeAdmin(@Arg("id") id: number): Promise<UserResponse> {
 		const user = await User.findOne(id);
 
 		if (!user) {
@@ -279,8 +346,7 @@ export class UserResolver {
 					},
 				],
 			};
-		}
-		else if (user.role === Role.ADMIN || user.role === Role.OWNER) {
+		} else if (user.role === Role.ADMIN || user.role === Role.OWNER) {
 			return {
 				errors: [
 					{
@@ -308,9 +374,7 @@ export class UserResolver {
 	@Mutation(() => UserResponse)
 	@UseMiddleware(isAuthenticated)
 	@UseMiddleware(isOwner)
-	async makeOwner(
-		@Arg("id") id: number
-	): Promise<UserResponse> {
+	async makeOwner(@Arg("id") id: number): Promise<UserResponse> {
 		const user = await User.findOne(id);
 
 		if (!user) {
@@ -322,8 +386,7 @@ export class UserResolver {
 					},
 				],
 			};
-		}
-		else if (user.role === Role.OWNER) {
+		} else if (user.role === Role.OWNER) {
 			return {
 				errors: [
 					{
@@ -352,20 +415,17 @@ export class UserResolver {
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuthenticated)
 	@UseMiddleware(isOwner)
-	async admin_deleteUser(
-		@Arg("id") id: number
-	): Promise<Boolean> {
+	async admin_deleteUser(@Arg("id") id: number): Promise<Boolean> {
 		const user = await User.findOne(id);
 
 		if (!user) {
-			return false
-		}
-		else if (user.role === Role.OWNER) {
-			return false
+			return false;
+		} else if (user.role === Role.OWNER) {
+			return false;
 		}
 		Post.delete({ creatorId: id });
 		User.delete({ id });
-		return true
+		return true;
 	}
 
 	@Mutation(() => Boolean)

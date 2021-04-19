@@ -1,13 +1,13 @@
-mutation Login($input: UserLoginType!){
-  login(input:$input){
-    user{
-      id
-      username
-      role
-    }
-    errors{
-      field
-      message
-    }
-  }
+mutation Login($input: UserLoginType!) {
+	login(input: $input) {
+		user {
+			id
+			username
+			role
+		}
+		errors {
+			field
+			message
+		}
+	}
 }

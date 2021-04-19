@@ -12,7 +12,9 @@ import connsectRedis from "connect-redis";
 import { UserResolver } from "./resolver/user";
 import { User } from "./entities/User";
 import cors from "cors";
+import env from "dotenv"
 const main = async () => {
+	env.config()
 	const dbConnect = await createConnection({
 		type: "postgres",
 		database: "thinkit",
@@ -44,7 +46,7 @@ const main = async () => {
 		})
 	);
 
-	app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+	app.use(cors({ origin: ["http://localhost:3000", process.env.ORIGIN as string], credentials: true }));
 
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({

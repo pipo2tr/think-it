@@ -1,8 +1,8 @@
-*{
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  box-sizing: border-box;
+* {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	box-sizing: border-box;
 }
 html,
 body {
@@ -12,7 +12,31 @@ body {
 		Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+.layout-container {
+	position: relative;
+}
 
-.layout-container{
-  position: relative;
+a {
+	text-decoration: none;
+}
+
+// had to be done
+.content {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: auto;
+	margin-bottom: auto;
+	display: flex;
+	justify-content: center;
+	min-width: 340px;
+	max-width: 50%;
+	height: 50%;
+	background-color: #fafafa;
+	box-shadow: 5px 10px 8px #888888;
+	border-radius: 10px;
 }

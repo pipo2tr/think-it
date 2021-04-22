@@ -29,6 +29,21 @@ const createClient = (ctx: NextPageContext) =>
 								};
 							},
 						},
+						postsByUser: {
+							keyArgs: [],
+							merge(
+								existing: PaginatedPost | undefined,
+								incoming: PaginatedPost
+							): PaginatedPost {
+								return {
+									...incoming,
+									posts: [
+										...(existing?.posts || []),
+										...incoming.posts,
+									],
+								};
+							},
+						},
 					},
 				},
 			},

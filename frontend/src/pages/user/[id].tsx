@@ -8,10 +8,14 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Layout from "../../components/Layout";
 import { withApollo } from "../../utils/withApollo";
 import Container from "@material-ui/core/Container";
-import { Box } from "@material-ui/core";
+import { Box, Button } from "@material-ui/core";
 import ProfileCard from "../../components/ProfileCard";
-import { useGetUserByIdQuery } from "../../generated/graphql";
+import {
+	useGetUserByIdQuery,
+	usePostsByUserQuery,
+} from "../../generated/graphql";
 import { useRouter } from "next/router";
+import InfiniteScroll from "react-infinite-scroll-component";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -31,11 +35,6 @@ const useStyles = makeStyles((theme: Theme) =>
 			fontSize: theme.typography.pxToRem(15),
 			fontWeight: theme.typography.fontWeightRegular,
 		},
-		title: {
-			fontSize: theme.typography.pxToRem(20),
-			fontWeight: theme.typography.fontWeightBold,
-			padding: theme.spacing(1),
-		},
 		hero: {
 			backgroundImage: "",
 			height: "auto",
@@ -43,13 +42,11 @@ const useStyles = makeStyles((theme: Theme) =>
 			flexDirection: "row",
 			justifyContent: "center",
 			display: "flex",
-			// alignItems: "center",
 			padding: "20px 0",
 		},
-		avtar: {
-			height: "56px",
-			width: "56px",
-			padding: theme.spacing(3),
+		flex: {
+			display: "flex",
+			justifyContent: "space-between",
 		},
 	})
 );
@@ -64,7 +61,13 @@ const userProfile = () => {
 			id: Id,
 		},
 	});
-
+	const { data: postData, fetchMore } = usePostsByUserQuery({
+		variables: {
+			id: Id,
+			limit: 10,
+			skip: 0,
+		},
+	});
 	const UserCard = (
 		<Box className={classes.hero}>
 			{data?.getUserById.errors ? (
@@ -77,6 +80,35 @@ const userProfile = () => {
 		</Box>
 	);
 
+	const fetChMorePosts = () => {
+		fetchMore({
+			variables: {
+				id: Id,
+				limit: 10,
+				skip: postData.postsByUser.posts.length,
+			},
+		});
+	};
+	const PostsAccordion = postData?.postsByUser?.posts.map((post) => (
+		<Accordion className={classes.accordion} key={post.id}>
+			<AccordionSummary
+				expandIcon={<ExpandMoreIcon />}
+				aria-controls="panel1a-content"
+				id="panel1a-header"
+			>
+				<Typography className={classes.heading}>
+					Posted On : {post.createdAt.split("T")[0]}
+				</Typography>
+				<Typography className={classes.heading}>
+					Likes: {post.points}
+				</Typography>
+			</AccordionSummary>
+			<AccordionDetails>
+				<Typography>{post.text}</Typography>
+			</AccordionDetails>
+		</Accordion>
+	));
+
 	return (
 		<Layout>
 			<Container component="main" maxWidth="xl">
@@ -88,25 +120,20 @@ const userProfile = () => {
 							Cannot fetch user
 						</Typography>
 					)}
-					<Accordion className={classes.accordion}>
-						<AccordionSummary
-							expandIcon={<ExpandMoreIcon />}
-							aria-controls="panel1a-content"
-							id="panel1a-header"
-						>
-							<Typography className={classes.heading}>
-								Accordion 1
-							</Typography>
-						</AccordionSummary>
-						<AccordionDetails>
-							<Typography>
-								Lorem ipsum dolor sit amet, consectetur
-								adipiscing elit. Suspendisse malesuada lacus ex,
-								sit amet blandit leo lobortis eget.
-							</Typography>
-						</AccordionDetails>
-					</Accordion>
 				</div>
+				<InfiniteScroll
+					dataLength={postData?.postsByUser?.posts.length} //This is important field to render the next data
+					next={fetChMorePosts}
+					hasMore={postData?.postsByUser?.hasMore}
+					loader={<h4>Loading...</h4>}
+					endMessage={
+						<p style={{ textAlign: "center" }}>
+							<b>User Has no more posts</b>
+						</p>
+					}
+				>
+					{PostsAccordion}
+				</InfiniteScroll>
 			</Container>
 		</Layout>
 	);

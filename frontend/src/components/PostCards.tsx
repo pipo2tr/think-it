@@ -67,7 +67,7 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 		<Card className={classes.root} key={post.id}>
 			<CardHeader
 				avatar={
-					<Link href={`${post.creatorId}`}>
+					<Link href="/user/[id]" as={`/user/${post.creatorId}`}>
 						<Avatar
 							aria-label="post"
 							className={classes.avatar}

@@ -8,10 +8,12 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import Layout from "../components/Layout";
-import { useRegisterMutation } from "../generated/graphql";
+import { MeDocument, MeQuery, useRegisterMutation } from "../generated/graphql";
 import { mapError } from "../utils/mapError";
+import { withApollo } from "../utils/withApollo";
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginTop: theme.spacing(8),
@@ -32,13 +34,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 	link: {
 		cursor: "pointer",
-		color: theme.palette.primary.dark
-	}
+		color: theme.palette.primary.dark,
+	},
 }));
 
-export default function register() {
+const register = () => {
 	const [register, { loading }] = useRegisterMutation();
-
+	const router = useRouter()
 	const classes = useStyles();
 	const formik = useFormik({
 		initialValues: {
@@ -47,10 +49,23 @@ export default function register() {
 			password: "",
 		},
 		onSubmit: async (values, { setErrors }) => {
-			const res = await register({ variables: { input: values } });
+			const res = await register({
+				variables: { input: values },
+				update: (cache, {data}) => {
+					cache.writeQuery<MeQuery>({
+						query: MeDocument,
+						data: {
+							__typename: "Query",
+							me: data?.register.user
+						}
+					})
+				},
+			});
 			if (res.data.register.errors) {
 				console.log(mapError(res.data.register.errors));
 				setErrors(mapError(res.data.register.errors));
+			} else if (res.data.register.user) {
+				router.push("/")
 			}
 		},
 	});
@@ -170,3 +185,5 @@ export default function register() {
 		</Layout>
 	);
 }
+
+export default withApollo({ssr: false})(register)

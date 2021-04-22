@@ -10,9 +10,10 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import React from "react";
 import Layout from "../components/Layout";
-import { useLoginMutation } from "../generated/graphql";
+import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
 import { mapError } from "../utils/mapError";
-
+import { useRouter } from "next/router";
+import { withApollo } from "../utils/withApollo";
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginTop: theme.spacing(8),
@@ -33,28 +34,38 @@ const useStyles = makeStyles((theme) => ({
 	},
 	link: {
 		cursor: "pointer",
-		color: theme.palette.primary.dark
-	}
+		color: theme.palette.primary.dark,
+	},
 }));
 
-export default function login() {
-
-	const [login, {loading}] = useLoginMutation()
-
+const login =() =>{
+	const [login, { loading }] = useLoginMutation();
+	const router = useRouter();
 	const classes = useStyles();
 	const formik = useFormik({
 		initialValues: {
 			usernameOremail: "",
 			password: "",
 		},
-        onSubmit: async (values, {setErrors}) => {
+		onSubmit: async (values, { setErrors }) => {
 			const res = await login({
 				variables: {
-				input: values
-				}
-			})
+					input: values,
+				},
+				update: (cache, { data }) => {
+					cache.writeQuery<MeQuery>({
+						query: MeDocument,
+						data: {
+							__typename: "Query",
+							me: data?.login.user,
+						},
+					});
+				},
+			});
 			if (res.data.login.errors) {
-				setErrors(mapError(res.data.login.errors))
+				setErrors(mapError(res.data.login.errors));
+			} else if (res.data.login.user) {
+				router.push("/");
 			}
 		},
 	});
@@ -68,7 +79,10 @@ export default function login() {
 					<Typography component="h1" variant="h5">
 						Sign in
 					</Typography>
-					<form className={classes.form} onSubmit={formik.handleSubmit}>
+					<form
+						className={classes.form}
+						onSubmit={formik.handleSubmit}
+					>
 						<TextField
 							variant="outlined"
 							margin="normal"
@@ -86,7 +100,8 @@ export default function login() {
 								Boolean(formik.errors.usernameOremail)
 							}
 							helperText={
-								formik.touched.usernameOremail && formik.errors.usernameOremail
+								formik.touched.usernameOremail &&
+								formik.errors.usernameOremail
 							}
 						/>
 						<TextField
@@ -106,7 +121,8 @@ export default function login() {
 								Boolean(formik.errors.password)
 							}
 							helperText={
-								formik.touched.password && formik.errors.password
+								formik.touched.password &&
+								formik.errors.password
 							}
 						/>
 						<LoadingButton
@@ -122,24 +138,24 @@ export default function login() {
 						<Grid container>
 							<Grid item xs>
 								<Link href="/forgot-password">
-								<Typography
-											component="p"
-											variant="subtitle2"
-											className={classes.link}
-										>
+									<Typography
+										component="p"
+										variant="subtitle2"
+										className={classes.link}
+									>
 										Forgot password?
-								</Typography>
+									</Typography>
 								</Link>
 							</Grid>
 							<Grid item>
 								<Link href="/register">
-								<Typography
-											component="p"
-											variant="subtitle2"
-											className={classes.link}
-										>
+									<Typography
+										component="p"
+										variant="subtitle2"
+										className={classes.link}
+									>
 										Don't have an account? Sign Up
-								</Typography>
+									</Typography>
 								</Link>
 							</Grid>
 						</Grid>
@@ -149,3 +165,4 @@ export default function login() {
 		</Layout>
 	);
 }
+export default withApollo({ssr: false})(login)

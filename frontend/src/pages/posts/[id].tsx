@@ -8,7 +8,7 @@ import { withApollo } from "../../utils/withApollo";
 const post = () => {
 	const router = useRouter();
 	const Id = parseInt(router.query.id as string);
-	const { data, loading } = usePostQuery({
+	const { data } = usePostQuery({
 		skip: !Id,
 		variables: {
 			id: Id,

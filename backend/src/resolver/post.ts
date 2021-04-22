@@ -115,7 +115,7 @@ export class PostResolver {
 	@UseMiddleware(isAuthenticated)
 	@UseMiddleware(isBanned)
 	async deletePost(
-		@Arg("id") id: number,
+		@Arg("id", ()=> Int) id: number,
 		@Ctx() { req }: GraphQlCxt
 	): Promise<boolean> {
 		const post = Post.findOne({

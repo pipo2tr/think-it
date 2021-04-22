@@ -12,6 +12,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import Layout from "../components/Layout";
 import { useForgotPasswordMutation } from "../generated/graphql";
+import { withApollo } from "../utils/withApollo";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function forgotPassword() {
+const forgotPassword = () => {
 	const [forgotPwd, { loading }] = useForgotPasswordMutation();
 	const [sentMail, setSentMail] = useState(false);
 	const classes = useStyles();
@@ -140,3 +141,5 @@ export default function forgotPassword() {
 		</Layout>
 	);
 }
+
+export default withApollo({ssr:false})(forgotPassword)

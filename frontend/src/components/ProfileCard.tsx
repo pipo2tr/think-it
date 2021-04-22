@@ -89,8 +89,8 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser }) => {
 						component="h2"
 						className={classes.flex}
 					>
-						{minUser.username}{" "}
-						<StarsIcon style={{ color: "gold" }} />
+						{minUser.username}
+						{minUser.role >= 2 ? <StarsIcon style={{ color: "gold" }} /> : null}
 					</Typography>
 					<Typography
 						variant="body2"
@@ -113,7 +113,7 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser }) => {
 						<ShareIcon style={{ color: "blue" }} />
 					</IconButton>
 				</div>
-				{minUser.role !== 3 && data?.me?.role >= 3 ? ModSection : null}
+				{minUser.role !== 3 && data?.me?.role >= 2 ? ModSection : null}
 			</div>
 		</Card>
 	);

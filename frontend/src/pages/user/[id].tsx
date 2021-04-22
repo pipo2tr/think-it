@@ -16,6 +16,7 @@ import {
 } from "../../generated/graphql";
 import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroll-component";
+import PostAccordion from "../../components/PostAccordian";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -90,25 +91,9 @@ const userProfile = () => {
 		});
 	};
 	const PostsAccordion = postData?.postsByUser?.posts.map((post) => (
-		<Accordion className={classes.accordion} key={post.id}>
-			<AccordionSummary
-				expandIcon={<ExpandMoreIcon />}
-				aria-controls="panel1a-content"
-				id="panel1a-header"
-			>
-				<Typography className={classes.heading}>
-					Posted On : {post.createdAt.split("T")[0]}
-				</Typography>
-				<Typography className={classes.heading}>
-					Likes: {post.points}
-				</Typography>
-			</AccordionSummary>
-			<AccordionDetails>
-				<Typography>{post.text}</Typography>
-			</AccordionDetails>
-		</Accordion>
+		<PostAccordion post={post} />
 	));
-
+	
 	return (
 		<Layout>
 			<Container component="main" maxWidth="xl">
@@ -121,7 +106,7 @@ const userProfile = () => {
 						</Typography>
 					)}
 				</div>
-				<InfiniteScroll
+				{postData ? <InfiniteScroll
 					dataLength={postData?.postsByUser?.posts.length} //This is important field to render the next data
 					next={fetChMorePosts}
 					hasMore={postData?.postsByUser?.hasMore}
@@ -132,8 +117,10 @@ const userProfile = () => {
 						</p>
 					}
 				>
-					{PostsAccordion}
-				</InfiniteScroll>
+					
+				{PostsAccordion}	
+					
+				</InfiniteScroll>: <div>Loading...</div>}
 			</Container>
 		</Layout>
 	);

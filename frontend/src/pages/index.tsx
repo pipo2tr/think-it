@@ -9,14 +9,14 @@ import { withApollo } from "../utils/withApollo";
 const Home = () => {
 	const { data, fetchMore } = usePostsQuery({
 		variables: {
-			limit: 15,
+			limit: 30,
 			skip: 0,
 		},
 	});
 	const moreData = () => {
 		fetchMore({
 			variables: {
-				limit: 15,
+				limit: 30,
 				skip: data.posts.posts.length,
 			},
 		});

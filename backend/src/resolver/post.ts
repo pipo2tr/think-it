@@ -10,12 +10,13 @@ import {
 	Root,
 	UseMiddleware,
 } from "type-graphql";
-import { getConnection } from "typeorm";
+import { getConnection, getRepository } from "typeorm";
 import { GraphQlCxt } from "../types/GraphQlCtx";
 import { isAuthenticated } from "../middleware/isAuthenticated";
 import { User } from "../entities/User";
 import { UserLoader } from "../utils/UserLoader";
 import { isBanned } from "../middleware/isBanned";
+import { PaginatedPost } from "../utils/ResolverTypes/PaginatedPostType";
 
 @Resolver(Post)
 export class PostResolver {
@@ -24,17 +25,28 @@ export class PostResolver {
 	creator(@Root() post: Post) {
 		return UserLoader.load(post.creatorId);
 	}
-	
-	@Query(() => [Post])
-	@UseMiddleware(isAuthenticated)
-	async myPosts(@Ctx() { req }: GraphQlCxt): Promise<Post[] | undefined>{
-		return Post.find({where: {creatorId: req.session.userId}})
-	}	
 
-	@Query(() => [Post])
+	@Query(() => PaginatedPost, { nullable: true })
 	@UseMiddleware(isBanned)
-	async postFromCreator(@Arg("id", () => Int) id: number): Promise<Post[] | undefined>	{
-		return Post.find({where: {creatorId: id}})
+	async postsByUser(
+		@Arg("id", () => Int) id: number,
+		@Arg("limit", () => Int) limit: number,
+		@Arg("skip", () => Int, { defaultValue: 0 }) skip: number
+	): Promise<PaginatedPost | undefined> {
+		const limitplus1 = limit + 1;
+
+		const posts = await getRepository(Post)
+			.createQueryBuilder("post")
+			.where('"creatorId" = :creatorId', { creatorId: id })
+			.orderBy('post."createdAt"', "DESC")
+			.skip(skip)
+			.take(limitplus1)
+			.getMany();
+		console.log(posts.length);
+		return {
+			posts: posts.slice(0, limit),
+			hasMore: posts.length === limitplus1,
+		};
 	}
 	// Get one post
 	@Query(() => Post, { nullable: true })
@@ -42,9 +54,24 @@ export class PostResolver {
 		return Post.findOne(id);
 	}
 
-	@Query(() => [Post])
-	async posts(): Promise<Post[]> {
-		return Post.find({});
+	@Query(() => PaginatedPost)
+	async posts(
+		@Arg("limit", () => Int) limit: number,
+		@Arg("skip", () => Int, { defaultValue: 0 }) skip: number
+	): Promise<PaginatedPost> {
+		const limitplus1 = limit + 1;
+
+		const posts = await getRepository(Post)
+			.createQueryBuilder("post")
+			.orderBy('post."createdAt"', "DESC")
+			.skip(skip)
+			.take(limitplus1)
+			.getMany();
+		console.log(posts.length);
+		return {
+			posts: posts.slice(0, limit),
+			hasMore: posts.length === limitplus1,
+		};
 	}
 
 	// create post
@@ -78,7 +105,7 @@ export class PostResolver {
 			.returning("*")
 			.execute();
 
-		console.log(post);
+		console.log(post.raw[0].length);
 
 		return post.raw[0];
 	}

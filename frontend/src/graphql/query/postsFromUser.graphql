@@ -1,0 +1,9 @@
+query PostsByUser($id: Int!, $limit: Int!, $skip: Int!) {
+  postsByUser(id: $id, limit: $limit, skip: $skip) {
+    posts {
+      id
+      text
+    }
+    hasMore
+  }
+}

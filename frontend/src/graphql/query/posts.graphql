@@ -1,0 +1,8 @@
+query Posts($limit: Int!, $skip: Int) {
+  posts(limit: $limit, skip: $skip) {
+    posts {
+      ...PostFrag
+    }
+    hasMore
+  }
+}

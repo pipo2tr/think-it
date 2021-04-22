@@ -17,17 +17,31 @@ import { User } from "../entities/User";
 import { isAuthenticated } from "../middleware/isAuthenticated";
 import { isOwner } from "../middleware/isOwner";
 import { GraphQlCxt } from "../types/GraphQlCtx";
-import { UserResponse } from "../utils/Error&ResponseType";
-import { registerValidator } from "../utils/registorValidator";
-import { UserLoginType } from "../utils/UserLoginType";
-import { UserRegisterType } from "../utils/UserRegisterType";
+import { UserResponse } from "../utils/ResolverTypes/Error&ResponseType";
+import { registerValidator } from "../utils/validators/registorValidator";
+import { UserLoginType } from "../utils/ResolverTypes/UserLoginType";
+import { UserRegisterType } from "../utils/ResolverTypes/UserRegisterType";
 import { isAdmin } from "../middleware/isAdmin";
 import { v4 } from "uuid";
 import { sendEmail } from "../utils/sendEmail";
-import { passwordValidator } from "../utils/passwordValidator";
+import { passwordValidator } from "../utils/validators/passwordValidator";
 
 @Resolver(User)
 export class UserResolver {
+	// prevents other users to see someone eles' email
+	@FieldResolver(() => String)
+	email(@Root() user: User, @Ctx() { req }: GraphQlCxt) {
+		if (req.session.userId === user.id) {
+			return user.email;
+		}
+		return "";
+	}
+
+	@FieldResolver(() => [Post])
+	posts(@Root() user: User) {
+		return Post.find({where: {creatorId: user.id}});
+	}
+
 	// returns the current logged in user
 	@Query(() => User, { nullable: true })
 	async me(@Ctx() { req }: GraphQlCxt): Promise<User | undefined> {
@@ -38,14 +52,6 @@ export class UserResolver {
 		}
 	}
 
-	// prevents other users to see someone eles' email
-	@FieldResolver(() => String)
-	email(@Root() user: User, @Ctx() { req }: GraphQlCxt) {
-		if (req.session.userId === user.id) {
-			return user.email;
-		}
-		return "";
-	}
 
 	// create user
 	@Mutation(() => UserResponse)

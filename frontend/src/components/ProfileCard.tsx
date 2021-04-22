@@ -12,6 +12,9 @@ import { MinUserType } from "../utils/MinUserTyoe";
 import BlockIcon from "@material-ui/icons/Block";
 import ShareIcon from "@material-ui/icons/Share";
 import { useMeQuery } from "../generated/graphql";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import DeleteIcon from "@material-ui/icons/Delete";
+import HealingIcon from '@material-ui/icons/Healing';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -46,7 +49,28 @@ interface ProfileCardType {
 
 const ProfileCard: FC<ProfileCardType> = ({ minUser }) => {
 	const classes = useStyles();
-	
+	const { data } = useMeQuery();
+
+	const ModSection = (
+		<div className={classes.controls}>
+			{minUser.role === 0 ? (
+				<IconButton aria-label="unban">
+					<HealingIcon style={{ color: "green" }} />
+				</IconButton>
+			) : (
+				<IconButton aria-label="ban">
+					<RemoveCircleIcon style={{ color: "red" }} />
+				</IconButton>
+			)}
+			{data?.me?.role === 3 ? (
+				<IconButton aria-label="delete user">
+					<DeleteIcon style={{ color: "red" }} />
+				</IconButton>
+			) : null}
+		</div>
+	);
+
+	console.log(data?.me?.role >= 3);
 
 	return (
 		<Card className={classes.root}>
@@ -86,9 +110,10 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser }) => {
 						<BlockIcon color="error" />
 					</IconButton>
 					<IconButton aria-label="share-profile">
-						<ShareIcon style={{ color: "blue" }}/>
+						<ShareIcon style={{ color: "blue" }} />
 					</IconButton>
 				</div>
+				{minUser.role !== 3 && data?.me?.role >= 3 ? ModSection : null}
 			</div>
 		</Card>
 	);

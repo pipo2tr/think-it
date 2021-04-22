@@ -3,6 +3,8 @@ query PostsByUser($id: Int!, $limit: Int!, $skip: Int!) {
     posts {
       id
       text
+      createdAt
+      points
     }
     hasMore
   }

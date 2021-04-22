@@ -127,6 +127,7 @@ export type Query = {
   post?: Maybe<Post>;
   posts: PaginatedPost;
   me?: Maybe<User>;
+  getUserById: UserResponse;
 };
 
 
@@ -145,6 +146,11 @@ export type QueryPostArgs = {
 export type QueryPostsArgs = {
   skip?: Maybe<Scalars['Int']>;
   limit: Scalars['Int'];
+};
+
+
+export type QueryGetUserByIdArgs = {
+  id: Scalars['Int'];
 };
 
 export type User = {
@@ -174,6 +180,11 @@ export type UserResponse = {
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
 };
+
+export type MinUserFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'username' | 'createdAt' | 'role'>
+);
 
 export type PostFragFragment = (
   { __typename?: 'Post' }
@@ -287,6 +298,25 @@ export type UpdatePostMutation = (
   )> }
 );
 
+export type GetUserByIdQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetUserByIdQuery = (
+  { __typename?: 'Query' }
+  & { getUserById: (
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & MinUserFragment
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -294,7 +324,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'role'>
+    & MinUserFragment
   )> }
 );
 
@@ -343,11 +373,19 @@ export type PostsByUserQuery = (
     & Pick<PaginatedPost, 'hasMore'>
     & { posts: Array<(
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'text'>
+      & Pick<Post, 'id' | 'text' | 'createdAt' | 'points'>
     )> }
   )> }
 );
 
+export const MinUserFragmentDoc = gql`
+    fragment MinUser on User {
+  id
+  username
+  createdAt
+  role
+}
+    `;
 export const PostFragFragmentDoc = gql`
     fragment PostFrag on Post {
   id
@@ -615,15 +653,54 @@ export function useUpdatePostMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdatePostMutationHookResult = ReturnType<typeof useUpdatePostMutation>;
 export type UpdatePostMutationResult = Apollo.MutationResult<UpdatePostMutation>;
 export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<UpdatePostMutation, UpdatePostMutationVariables>;
+export const GetUserByIdDocument = gql`
+    query GetUserById($id: Int!) {
+  getUserById(id: $id) {
+    user {
+      ...MinUser
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+    ${MinUserFragmentDoc}`;
+
+/**
+ * __useGetUserByIdQuery__
+ *
+ * To run a query within a React component, call `useGetUserByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserByIdQuery(baseOptions: Apollo.QueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+      }
+export function useGetUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+        }
+export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
+export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
+export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
-    id
-    username
-    role
+    ...MinUser
   }
 }
-    `;
+    ${MinUserFragmentDoc}`;
 
 /**
  * __useMeQuery__
@@ -731,6 +808,8 @@ export const PostsByUserDocument = gql`
     posts {
       id
       text
+      createdAt
+      points
     }
     hasMore
   }

@@ -4,6 +4,7 @@ import {
 	Arg,
 	Ctx,
 	FieldResolver,
+	Int,
 	Mutation,
 	Query,
 	Resolver,
@@ -39,7 +40,7 @@ export class UserResolver {
 
 	@FieldResolver(() => [Post])
 	posts(@Root() user: User) {
-		return Post.find({where: {creatorId: user.id}});
+		return Post.find({ where: { creatorId: user.id } });
 	}
 
 	// returns the current logged in user
@@ -52,6 +53,23 @@ export class UserResolver {
 		}
 	}
 
+	@Query(() => UserResponse)
+	async getUserById(@Arg("id", ()=> Int) id: number): Promise<UserResponse> {
+		const user = await User.findOne({ where: { id } });
+
+		if (!user) {
+			return {
+				errors: [
+					{
+						field: "User",
+						message: "User o longer exists",
+					},
+				],
+			};
+		}
+
+		return { user };
+	}
 
 	// create user
 	@Mutation(() => UserResponse)

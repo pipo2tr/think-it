@@ -1,0 +1,6 @@
+fragment MinUser on User {
+	id
+	username
+	createdAt
+	role
+}

@@ -1,0 +1,11 @@
+query GetUserById($id: Int!){
+  getUserById(id:$id){
+    user{
+      ...MinUser
+    }
+    errors{
+      field
+      message
+    }
+  }
+}

@@ -12,9 +12,11 @@ import connsectRedis from "connect-redis";
 import { UserResolver } from "./resolver/user";
 import { User } from "./entities/User";
 import cors from "cors";
-import env from "dotenv"
+import env from "dotenv";
+import path from "path";
+
 const main = async () => {
-	env.config()
+	env.config();
 	const dbConnect = await createConnection({
 		type: "postgres",
 		database: "thinkit",
@@ -23,12 +25,15 @@ const main = async () => {
 		synchronize: true,
 		logging: !PROD,
 		entities: [Post, User],
+		migrations: [path.join(__dirname, "./migrations/*")],
 	});
+	await dbConnect.runMigrations();
+	const app = express();
+
+	app.set("trust proxy", 1);
 
 	let RedisStore = connsectRedis(session);
 	let redis = new Redis();
-
-	const app = express();
 
 	app.use(
 		session({
@@ -46,7 +51,12 @@ const main = async () => {
 		})
 	);
 
-	app.use(cors({ origin: ["http://localhost:3000", process.env.ORIGIN as string], credentials: true }));
+	app.use(
+		cors({
+			origin: ["http://localhost:3000", process.env.ORIGIN as string],
+			credentials: true,
+		})
+	);
 
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({

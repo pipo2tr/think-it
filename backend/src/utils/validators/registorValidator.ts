@@ -1,4 +1,4 @@
-import { UserRegisterType } from "./UserRegisterType";
+import { UserRegisterType } from "../ResolverTypes/UserRegisterType";
 import { pwdRegex, emailRegex } from "./regex";
 
 export const registerValidator = (input: UserRegisterType) => {

@@ -34,8 +34,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	link: {
 		cursor: "pointer",
-		color: theme.palette.primary.dark
-	}
+		color: theme.palette.primary.dark,
+	},
 }));
 
 export default function changePassword() {
@@ -67,74 +67,71 @@ export default function changePassword() {
 	});
 	return (
 		<Layout layoutWidth="xs">
-				<div className={classes.paper}>
-					<Avatar className={classes.avatar}>
-						<VpnKeyIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
-						Change Password
-					</Typography>
-					<form
-						className={classes.form}
-						onSubmit={formik.handleSubmit}
-					>
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							name="password"
-							label="New Password"
-							type="password"
-							id="password"
-							autoComplete="current-password"
-							value={formik.values.password}
-							onChange={formik.handleChange}
-							error={
-								formik.touched.password &&
-								Boolean(formik.errors.password)
-							}
-							helperText={
-								formik.touched.password &&
-								formik.errors.password
-							}
-						/>
-						{tokenError ? (
-							<Grid container>
-								<Grid item xs>
+			<div className={classes.paper}>
+				<Avatar className={classes.avatar}>
+					<VpnKeyIcon />
+				</Avatar>
+				<Typography component="h1" variant="h5">
+					Change Password
+				</Typography>
+				<form className={classes.form} onSubmit={formik.handleSubmit}>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						autoFocus
+						name="password"
+						label="New Password"
+						type="password"
+						id="password"
+						autoComplete="current-password"
+						value={formik.values.password}
+						onChange={formik.handleChange}
+						error={
+							formik.touched.password &&
+							Boolean(formik.errors.password)
+						}
+						helperText={
+							formik.touched.password && formik.errors.password
+						}
+					/>
+					{tokenError ? (
+						<Grid container>
+							<Grid item xs>
+								<Typography
+									component="p"
+									variant="subtitle2"
+									color="error"
+								>
+									{tokenError}
+								</Typography>
+							</Grid>
+							<Grid item>
+								<Link href="/forgot-password">
 									<Typography
 										component="p"
 										variant="subtitle2"
-										color="error"
+										className={classes.link}
 									>
-										{tokenError}
+										Get a new token
 									</Typography>
-								</Grid>
-								<Grid item>
-									<Link href="/forgot-password">
-										<Typography
-											component="p"
-											variant="subtitle2"
-											className={classes.link}
-										>
-											Get a new token
-										</Typography>
-									</Link>
-								</Grid>
+								</Link>
 							</Grid>
-						) : null}
-						<LoadingButton
-							pending={false}
-							type="submit"
-							fullWidth
-							variant="contained"
-							color="primary"
-							className={classes.submit}
-						>
-							Change
-						</LoadingButton>
-					</form>
-				</div>
+						</Grid>
+					) : null}
+					<LoadingButton
+						pending={false}
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						className={classes.submit}
+					>
+						Change
+					</LoadingButton>
+				</form>
+			</div>
 		</Layout>
 	);
 }

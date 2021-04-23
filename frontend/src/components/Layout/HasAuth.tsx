@@ -14,7 +14,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import ExploreIcon from "@material-ui/icons/Explore";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import {
 	useDeleteMeMutation,
 	useLogoutMutation,
@@ -22,6 +22,8 @@ import {
 } from "../../generated/graphql";
 import DeleteForeverRoundedIcon from "@material-ui/icons/DeleteForeverRounded";
 import AlertDialog from "../Utils/AlertDialog";
+import CreatePost from "../EditPost/CreatePost";
+import PostModal from "../EditPost/PostModal";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		menuButton: {
@@ -46,14 +48,21 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-export function HasAuthMobile() {
+interface HasAuthMobileProps {
+	handleMobileMenuClose: () => void;
+}
+
+export const HasAuthMobile: FC<HasAuthMobileProps> = ({
+	handleMobileMenuClose,
+}) => {
 	const apollo = useApolloClient();
 	const classes = useStyles();
 	const [deleteMe] = useDeleteMeMutation();
-	const [open, setOpen] = useState(true);
+	const [open, setOpen] = useState(false);
 	const [openDailoge, setOpenDailoge] = useState(false);
 	const { data } = useMeQuery();
 	const [logout] = useLogoutMutation();
+	const [openModal, setOpenModal] = useState(false);
 	const handleLogout = async () => {
 		await logout();
 		await apollo.resetStore();
@@ -67,13 +76,22 @@ export function HasAuthMobile() {
 		setOpenDailoge(true);
 	};
 	const handleClose = () => {
+		
 		setOpenDailoge(false);
+	};
+	const handleCloseModal = () => {
+		setOpenModal(false);
+		handleMobileMenuClose?.();
 	};
 
 	const handleDeleteMe = async () => {
 		await deleteMe();
 		await apollo.resetStore();
 		setOpenDailoge(false);
+	};
+
+	const modalOpener = () => {
+		setOpenModal(true);
 	};
 
 	if (!data?.me?.username) {
@@ -92,14 +110,12 @@ export function HasAuthMobile() {
 				</ListSubheader>
 			}
 		>
-			<Link href="/create-post">
-				<ListItem button>
-					<ListItemIcon>
-						<CreateIcon />
-					</ListItemIcon>
-					<ListItemText primary="Create Post" />
-				</ListItem>
-			</Link>
+			<ListItem button onClick={modalOpener}>
+				<ListItemIcon>
+					<CreateIcon />
+				</ListItemIcon>
+				<ListItemText primary="Create Post" />
+			</ListItem>
 			<ListItem button>
 				<ListItemIcon>
 					<ExploreIcon />
@@ -154,6 +170,9 @@ export function HasAuthMobile() {
 				text=" This action is irreversible and all your posts will be removed from the site. Choose carefully"
 				title="Do you want to delete your account ?"
 			/>
+			<PostModal handleClose={handleCloseModal} openModal={openModal}>
+				<CreatePost handleClose={handleCloseModal} />
+			</PostModal>
 		</List>
 	);
-}
+};

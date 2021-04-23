@@ -14,18 +14,19 @@ import Link from "next/link";
 import React, { FC, useState } from "react";
 import { useMeQuery } from "../../generated/graphql";
 import { PostsType } from "../../utils/PostsType";
-import EditModal from "../EditPost/EditModal";
+import EditPost from "../EditPost/EditPost";
+import PostModal from "../EditPost/PostModal";
 import PostMenu from "./PostMenu";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
 			maxWidth: "100%",
-			width:"auto",
-			margin:"3px",
+			width: "auto",
+			margin: "3px",
 			boxShadow: "2px 2px 2px #888888",
 			height: "auto",
 			[theme.breakpoints.up("md")]: {
-				minWidth:"80%"
+				minWidth: "80%",
 			},
 		},
 		expandOpen: {
@@ -48,7 +49,7 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 	const { data: meData } = useMeQuery();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
-	const [openModal, setOpen] = React.useState(false);
+	const [openModal, setOpen] = useState(false);
 
 	const modalOpener = () => {
 		setOpen(true);
@@ -111,11 +112,12 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 				post={post}
 				modalOpener={modalOpener}
 			/>
-			<EditModal
+			<PostModal
 				handleClose={handleClose}
 				openModal={openModal}
-				post={post}
-			/>
+			>
+				<EditPost post={post} handleClose={handleClose} />
+			</PostModal>
 		</Card>
 	);
 };

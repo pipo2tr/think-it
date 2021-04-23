@@ -83,11 +83,7 @@ export default function NavBar() {
 					<div className={classes.grow} />
 
 					<div className={classes.sectionDesktop}>
-						{data?.me?.username ? (
-							null
-						) : (
-							<NotAuthDesktop />
-						)}
+						{data?.me?.username ? null : <NotAuthDesktop />}
 					</div>
 					<div className={classes.sectionMobile}>
 						<IconButton
@@ -110,7 +106,9 @@ export default function NavBar() {
 				>
 					<div className={classes.list}>
 						{data?.me?.username ? (
-							<HasAuthMobile />
+							<HasAuthMobile
+								handleMobileMenuClose={handleMobileMenuClose}
+							/>
 						) : (
 							<NotAuthMobile />
 						)}

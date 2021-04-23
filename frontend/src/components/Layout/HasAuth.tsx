@@ -14,8 +14,14 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import ExploreIcon from "@material-ui/icons/Explore";
 import Link from "next/link";
-import React from "react";
-import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
+import React, { useState } from "react";
+import {
+	useDeleteMeMutation,
+	useLogoutMutation,
+	useMeQuery,
+} from "../../generated/graphql";
+import DeleteForeverRoundedIcon from "@material-ui/icons/DeleteForeverRounded";
+import AlertDialog from "../Utils/AlertDialog";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		menuButton: {
@@ -28,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) =>
 			[theme.breakpoints.up("md")]: {
 				boxShadow: "2px 2px 2px #888888",
 			},
-			
 		},
 		nested: {
 			paddingLeft: theme.spacing(4),
@@ -44,7 +49,9 @@ const useStyles = makeStyles((theme: Theme) =>
 export function HasAuthMobile() {
 	const apollo = useApolloClient();
 	const classes = useStyles();
-	const [open, setOpen] = React.useState(true);
+	const [deleteMe] = useDeleteMeMutation();
+	const [open, setOpen] = useState(true);
+	const [openDailoge, setOpenDailoge] = useState(false);
 	const { data } = useMeQuery();
 	const [logout] = useLogoutMutation();
 	const handleLogout = async () => {
@@ -54,6 +61,19 @@ export function HasAuthMobile() {
 
 	const handleClick = () => {
 		setOpen(!open);
+	};
+
+	const handleClickOpen = () => {
+		setOpenDailoge(true);
+	};
+	const handleClose = () => {
+		setOpenDailoge(false);
+	};
+
+	const handleDeleteMe = async () => {
+		await deleteMe();
+		await apollo.resetStore();
+		setOpenDailoge(false);
 	};
 
 	if (!data?.me?.username) {
@@ -113,8 +133,27 @@ export function HasAuthMobile() {
 						</ListItemIcon>
 						<ListItemText primary="Logout" />
 					</ListItem>
+					<ListItem
+						button
+						className={classes.nested}
+						onClick={handleClickOpen}
+					>
+						<ListItemIcon>
+							<DeleteForeverRoundedIcon
+								style={{ color: "red" }}
+							/>
+						</ListItemIcon>
+						<ListItemText primary="Delete Account" />
+					</ListItem>
 				</List>
 			</Collapse>
+			<AlertDialog
+				handleAction={handleDeleteMe}
+				handleClose={handleClose}
+				openDialog={openDailoge}
+				text=" This action is irreversible and all your posts will be removed from the site. Choose carefully"
+				title="Do you want to delete your account ?"
+			/>
 		</List>
 	);
 }

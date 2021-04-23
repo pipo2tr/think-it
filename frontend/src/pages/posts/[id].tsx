@@ -4,6 +4,7 @@ import PostCards from "../../components/PostCard/PostCards";
 import PostLayout from "../../components/Layout/PostLayout";
 import { usePostQuery } from "../../generated/graphql";
 import { withApollo } from "../../utils/withApollo";
+import BackDrop from "../../components/Utils/BackDrop";
 
 const post = () => {
 	const router = useRouter();
@@ -20,7 +21,7 @@ const post = () => {
 			{data?.post ? (
 				<PostCards post={data.post} />
 			) : (
-				<div>Post doesn't exist</div>
+				<BackDrop />
 			)}
 		</PostLayout>
 	);

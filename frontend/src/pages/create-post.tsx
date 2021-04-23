@@ -52,8 +52,7 @@ const createPost = () => {
 		},
 	});
 	return (
-		<Layout>
-			<Container component="main" maxWidth="xs">
+		<Layout layoutWidth="xs">
 				<div className={classes.paper}>
 					<Avatar className={classes.avatar}>
 						<CreateIcon />
@@ -99,7 +98,6 @@ const createPost = () => {
 						</LoadingButton>
 					</form>
 				</div>
-			</Container>
 		</Layout>
 	);
 };

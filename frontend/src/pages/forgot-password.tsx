@@ -1,16 +1,16 @@
 import Avatar from "@material-ui/core/Avatar";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import MoodBadIcon from "@material-ui/icons/MoodBad";
 import MoodIcon from "@material-ui/icons/Mood";
+import MoodBadIcon from "@material-ui/icons/MoodBad";
 import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import Link from "next/link";
 import React, { useState } from "react";
 import Layout from "../components/Layout/Layout";
+import CustomSnackbar from "../components/Utils/CustomSnackbar";
 import { useForgotPasswordMutation } from "../generated/graphql";
 import { withApollo } from "../utils/withApollo";
 
@@ -54,88 +54,88 @@ const forgotPassword = () => {
 		},
 	});
 	return (
-		<Layout layoutWidth = {sentMail ? "lg" : "xs"}>
+		<Layout layoutWidth={sentMail ? "lg" : "xs"}>
 			{sentMail ? (
-					<div className={classes.paper}>
-						<Avatar className={classes.avatar}>
-							<MoodIcon />
-						</Avatar>
-						<Typography component="h1" variant="h5">
-							Succefullty sent mail to {formik.values.email},
-							please check your inbox
-						</Typography>
-					</div>
+				<div className={classes.paper}>
+					<Avatar className={classes.avatar}>
+						<MoodIcon />
+					</Avatar>
+					<Typography component="h1" variant="h5">
+						Succefullty sent mail to {formik.values.email}, please
+						check your inbox
+					</Typography>
+				</div>
 			) : (
-					<div className={classes.paper}>
-						<Avatar className={classes.avatar}>
-							<MoodBadIcon />
-						</Avatar>
-						<Typography component="h1" variant="h5">
-							Forgot Password
-						</Typography>
-						<form
-							className={classes.form}
-							onSubmit={formik.handleSubmit}
+				<div className={classes.paper}>
+					<Avatar className={classes.avatar}>
+						<MoodBadIcon />
+					</Avatar>
+					<Typography component="h1" variant="h5">
+						Forgot Password
+					</Typography>
+					<form
+						className={classes.form}
+						onSubmit={formik.handleSubmit}
+					>
+						<TextField
+							variant="outlined"
+							margin="normal"
+							required
+							fullWidth
+							id="email"
+							label="Email Address"
+							name="email"
+							autoComplete="email"
+							autoFocus
+							value={formik.values.email}
+							onChange={formik.handleChange}
+							error={
+								formik.touched.email &&
+								Boolean(formik.errors.email)
+							}
+							helperText={
+								formik.touched.email && formik.errors.email
+							}
+						/>
+						<LoadingButton
+							pending={loading}
+							type="submit"
+							fullWidth
+							variant="contained"
+							color="primary"
+							className={classes.submit}
 						>
-							<TextField
-								variant="outlined"
-								margin="normal"
-								required
-								fullWidth
-								id="email"
-								label="Email Address"
-								name="email"
-								autoComplete="email"
-								autoFocus
-								value={formik.values.email}
-								onChange={formik.handleChange}
-								error={
-									formik.touched.email &&
-									Boolean(formik.errors.email)
-								}
-								helperText={
-									formik.touched.email && formik.errors.email
-								}
-							/>
-							<LoadingButton
-								pending={loading}
-								type="submit"
-								fullWidth
-								variant="contained"
-								color="primary"
-								className={classes.submit}
-							>
-								Submit
-							</LoadingButton>
-							<Grid container>
-								<Grid item xs>
-									<Link href="/register">
-										<Typography
-											component="p"
-											variant="subtitle2"
-											className={classes.link}
-										>
-											Don't have an account?
-										</Typography>
-									</Link>
-								</Grid>
-								<Grid item>
-									<Link href="/login">
-										<Typography
-											component="p"
-											variant="subtitle2"
-											className={classes.link}
-										>
-											I remember my password!
-										</Typography>
-									</Link>
-								</Grid>
+							Submit
+						</LoadingButton>
+						<Grid container>
+							<Grid item xs>
+								<Link href="/register">
+									<Typography
+										component="p"
+										variant="subtitle2"
+										className={classes.link}
+									>
+										Don't have an account?
+									</Typography>
+								</Link>
 							</Grid>
-						</form>
-					</div>
+							<Grid item>
+								<Link href="/login">
+									<Typography
+										component="p"
+										variant="subtitle2"
+										className={classes.link}
+									>
+										I remember my password!
+									</Typography>
+								</Link>
+							</Grid>
+						</Grid>
+					</form>
+				</div>
 			)}
 		</Layout>
 	);
-}
+};
 
-export default withApollo({ssr:false})(forgotPassword)
+export default withApollo({ ssr: false })(forgotPassword);

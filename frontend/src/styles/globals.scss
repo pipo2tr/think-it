@@ -43,3 +43,46 @@ a {
 .MuiAccordionSummary-content {
 	justify-content: space-between;
 }
+
+.alert {
+	padding: 10px;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-radius: 10px;
+}
+.error {
+	color: #d8000c;
+	background-color: #ffbaba;
+}
+.success {
+	color: #270;
+	background-color: #dff2bf;
+}
+.warn {
+	color: #9f6000;
+	background-color: #feefb3;
+}
+.info {
+	color: #059;
+	background-color: #bef;
+}
+
+.text {
+	padding-left: 10px;
+}
+// .closebtn {
+// 	margin-left: 15px;
+// 	color: white;
+// 	font-weight: bold;
+// 	float: right;
+// 	font-size: 22px;
+// 	line-height: 20px;
+// 	cursor: pointer;
+// 	transition: 0.3s;
+// }
+
+// .closebtn:hover {
+// 	color: black;
+// }

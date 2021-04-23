@@ -1,10 +1,11 @@
-import { Button } from "@material-ui/core";
+import { Backdrop, Button, CircularProgress } from "@material-ui/core";
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PostCards from "../components/PostCard/PostCards";
 import PostLayout from "../components/Layout/PostLayout";
 import { usePostsQuery } from "../generated/graphql";
 import { withApollo } from "../utils/withApollo";
+import BackDrop from "../components/Utils/BackDrop";
 
 const Home = () => {
 	const { data, fetchMore } = usePostsQuery({
@@ -22,9 +23,11 @@ const Home = () => {
 		});
 	};
 	if (!data) {
-		return <PostLayout>
-			Failed to get posts from server, try again later
-		</PostLayout>
+		return (
+			<PostLayout>
+				<BackDrop />
+			</PostLayout>
+		);
 	}
 	return (
 		<PostLayout>

@@ -66,8 +66,7 @@ export default function changePassword() {
 		},
 	});
 	return (
-		<Layout>
-			<Container component="main" maxWidth="xs">
+		<Layout layoutWidth="xs">
 				<div className={classes.paper}>
 					<Avatar className={classes.avatar}>
 						<VpnKeyIcon />
@@ -136,7 +135,6 @@ export default function changePassword() {
 						</LoadingButton>
 					</form>
 				</div>
-			</Container>
 		</Layout>
 	);
 }

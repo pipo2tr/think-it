@@ -5,15 +5,12 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import React, { FC } from "react";
-import { MinPostType } from "../utils/minPostType";
+import { MinPostType } from "../utils/MinPostType";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		
 		accordion: {
 			width: "100%",
-			[theme.breakpoints.up("sm")]: {
-				width: "60%",
-			},
 		},
 		heading: {
 			fontSize: theme.typography.pxToRem(15),

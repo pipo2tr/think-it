@@ -70,8 +70,7 @@ const login =() =>{
 		},
 	});
 	return (
-		<Layout>
-			<Container component="main" maxWidth="xs">
+		<Layout layoutWidth="xs">
 				<div className={classes.paper}>
 					<Avatar className={classes.avatar}>
 						<LockOutlinedIcon />
@@ -161,7 +160,6 @@ const login =() =>{
 						</Grid>
 					</form>
 				</div>
-			</Container>
 		</Layout>
 	);
 }

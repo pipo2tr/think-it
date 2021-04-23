@@ -118,7 +118,7 @@ export class PostResolver {
 		@Arg("id", ()=> Int) id: number,
 		@Ctx() { req }: GraphQlCxt
 	): Promise<boolean> {
-		const post = Post.findOne({
+		const post = await Post.findOne({
 			where: { id, creatorId: req.session.userId },
 		});
 

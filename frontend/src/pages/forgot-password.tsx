@@ -54,9 +54,8 @@ const forgotPassword = () => {
 		},
 	});
 	return (
-		<Layout>
+		<Layout layoutWidth = {sentMail ? "lg" : "xs"}>
 			{sentMail ? (
-				<Container component="main" maxWidth="lg">
 					<div className={classes.paper}>
 						<Avatar className={classes.avatar}>
 							<MoodIcon />
@@ -66,9 +65,7 @@ const forgotPassword = () => {
 							please check your inbox
 						</Typography>
 					</div>
-				</Container>
 			) : (
-				<Container component="main" maxWidth="xs">
 					<div className={classes.paper}>
 						<Avatar className={classes.avatar}>
 							<MoodBadIcon />
@@ -136,7 +133,6 @@ const forgotPassword = () => {
 							</Grid>
 						</form>
 					</div>
-				</Container>
 			)}
 		</Layout>
 	);

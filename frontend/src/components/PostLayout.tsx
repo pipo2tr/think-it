@@ -1,4 +1,4 @@
-import { Container, useMediaQuery } from "@material-ui/core";
+import { useMediaQuery } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -40,8 +40,7 @@ const PostLayout: FC = ({ children }) => {
 	
 	
 	return (
-		<Layout>
-			<Container component="main" maxWidth={mq ? "xl" : "md"}>
+		<Layout layoutWidth={mq ? "xl" : "md"}>
 				<Grid container spacing={mq ? 0 : 3} className={classes.paper}>
 					<Grid item xs={9} className={classes.grid1}>
 						{children}
@@ -54,7 +53,6 @@ const PostLayout: FC = ({ children }) => {
 						</Grid>
 					) : null}
 				</Grid>
-			</Container>
 		</Layout>
 	);
 };

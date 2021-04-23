@@ -44,7 +44,6 @@ const createPost = () => {
 				variables: values,
 				update: (cache) => {
 					cache.evict({ fieldName: "posts" });
-					console.log(cache);
 				},
 			});
 			if (!res.errors) {

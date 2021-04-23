@@ -1,7 +1,9 @@
 import { Menu, MenuItem } from "@material-ui/core";
 import Link from "next/link";
 import React, { FC } from "react";
+import { useDeletePostMutation, useMeQuery } from "../generated/graphql";
 import { PostsType } from "../utils/PostsType";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 interface PostMenuInterface {
 	anchorEl: HTMLElement | null;
@@ -18,6 +20,16 @@ const PostMenu: FC<PostMenuInterface> = ({
 	post,
 	modalOpener,
 }) => {
+	const [deletePost] = useDeletePostMutation()
+
+	const removePost = async (id: number) => {
+		await deletePost({
+			variables: { id },
+			update: (cache) => {
+				cache.evict({ fieldName: "posts" })
+			}
+		})
+	}
 	return (
 		<Menu
 			id="menu-appbar"
@@ -35,7 +47,7 @@ const PostMenu: FC<PostMenuInterface> = ({
 			onClose={handleClose}
 		>
 			<MenuItem onClick={modalOpener}>Edit</MenuItem>
-			<MenuItem>Delete</MenuItem>
+			<MenuItem onClick = {()=> removePost(post.id)}><DeleteIcon />Delete</MenuItem>
 		</Menu>
 	);
 };

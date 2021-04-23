@@ -26,12 +26,6 @@ const useStyles = makeStyles((theme: Theme) =>
 			flexDirection: "column",
 			alignItems: "center",
 		},
-		accordion: {
-			width: "100%",
-			[theme.breakpoints.up("sm")]: {
-				width: "60%",
-			},
-		},
 		heading: {
 			fontSize: theme.typography.pxToRem(15),
 			fontWeight: theme.typography.fontWeightRegular,
@@ -49,6 +43,9 @@ const useStyles = makeStyles((theme: Theme) =>
 			display: "flex",
 			justifyContent: "space-between",
 		},
+		post: {
+			margin: "auto"
+		}
 	})
 );
 
@@ -93,35 +90,37 @@ const userProfile = () => {
 	const PostsAccordion = postData?.postsByUser?.posts.map((post) => (
 		<PostAccordion post={post} />
 	));
-	
+
 	return (
-		<Layout>
-			<Container component="main" maxWidth="xl">
-				<div className={classes.root}>
-					{data ? (
-						UserCard
-					) : (
-						<Typography className={classes.heading}>
-							Cannot fetch user
-						</Typography>
-					)}
-				</div>
-				{postData ? <InfiniteScroll
-					dataLength={postData?.postsByUser?.posts.length} //This is important field to render the next data
-					next={fetChMorePosts}
-					hasMore={postData?.postsByUser?.hasMore}
-					loader={<h4>Loading...</h4>}
-					endMessage={
-						<p style={{ textAlign: "center" }}>
-							<b>User Has no more posts</b>
-						</p>
-					}
-				>
-					
-				{PostsAccordion}	
-					
-				</InfiniteScroll>: <div>Loading...</div>}
-			</Container>
+		<Layout layoutWidth="md">
+			<div className={classes.root}>
+				{data ? (
+					UserCard
+				) : (
+					<Typography className={classes.heading}>
+						Cannot fetch user
+					</Typography>
+				)}
+			</div>
+			<div className={classes.post}>
+				{postData ? (
+					<InfiniteScroll
+						dataLength={postData?.postsByUser?.posts.length} //This is important field to render the next data
+						next={fetChMorePosts}
+						hasMore={postData?.postsByUser?.hasMore}
+						loader={<h4>Loading...</h4>}
+						endMessage={
+							<p style={{ textAlign: "center" }}>
+								<b>User Has no more posts</b>
+							</p>
+						}
+					>
+						{PostsAccordion}
+					</InfiniteScroll>
+				) : (
+					<div>Loading...</div>
+				)}
+			</div>
 		</Layout>
 	);
 };

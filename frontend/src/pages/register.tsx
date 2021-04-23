@@ -70,8 +70,7 @@ const register = () => {
 		},
 	});
 	return (
-		<Layout>
-			<Container component="main" maxWidth="xs">
+		<Layout layoutWidth = "xs">
 				<div className={classes.paper}>
 					<Avatar className={classes.avatar}>
 						<PersonAddIcon />
@@ -181,7 +180,6 @@ const register = () => {
 						</Grid>
 					</form>
 				</div>
-			</Container>
 		</Layout>
 	);
 }

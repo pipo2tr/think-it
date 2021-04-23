@@ -1,10 +1,9 @@
 import { Menu, MenuItem } from "@material-ui/core";
-import Link from "next/link";
-import React, { FC } from "react";
-import { useDeletePostMutation, useMeQuery } from "../generated/graphql";
-import { PostsType } from "../utils/PostsType";
 import DeleteIcon from "@material-ui/icons/Delete";
-
+import React, { FC } from "react";
+import { useDeletePostMutation } from "../../generated/graphql";
+import { PostsType } from "../../utils/PostsType";
+import CreateIcon from "@material-ui/icons/Create";
 interface PostMenuInterface {
 	anchorEl: HTMLElement | null;
 	handleClose: () => void;
@@ -20,16 +19,16 @@ const PostMenu: FC<PostMenuInterface> = ({
 	post,
 	modalOpener,
 }) => {
-	const [deletePost] = useDeletePostMutation()
+	const [deletePost] = useDeletePostMutation();
 
 	const removePost = async (id: number) => {
 		await deletePost({
 			variables: { id },
 			update: (cache) => {
-				cache.evict({ fieldName: "posts" })
-			}
-		})
-	}
+				cache.evict({ fieldName: "posts" });
+			},
+		});
+	};
 	return (
 		<Menu
 			id="menu-appbar"
@@ -46,8 +45,12 @@ const PostMenu: FC<PostMenuInterface> = ({
 			open={open}
 			onClose={handleClose}
 		>
-			<MenuItem onClick={modalOpener}>Edit</MenuItem>
-			<MenuItem onClick = {()=> removePost(post.id)}><DeleteIcon />Delete</MenuItem>
+			<MenuItem onClick={modalOpener}>
+				<CreateIcon style={{ color: "blue" }}/>
+			</MenuItem>
+			<MenuItem onClick={() => removePost(post.id)}>
+				<DeleteIcon style={{ color: "red" }} />
+			</MenuItem>
 		</Menu>
 	);
 };

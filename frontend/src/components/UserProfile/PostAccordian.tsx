@@ -5,7 +5,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import React, { FC } from "react";
-import { MinPostType } from "../utils/MinPostType";
+import { MinPostType } from "../../utils/MinPostType";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		

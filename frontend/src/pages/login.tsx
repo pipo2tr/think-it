@@ -9,7 +9,7 @@ import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import Link from "next/link";
 import React from "react";
-import Layout from "../components/Layout";
+import Layout from "../components/Layout/Layout";
 import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
 import { mapError } from "../utils/mapError";
 import { useRouter } from "next/router";

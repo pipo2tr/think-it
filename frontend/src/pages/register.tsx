@@ -10,7 +10,7 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import Layout from "../components/Layout";
+import Layout from "../components/Layout/Layout";
 import { MeDocument, MeQuery, useRegisterMutation } from "../generated/graphql";
 import { mapError } from "../utils/mapError";
 import { withApollo } from "../utils/withApollo";

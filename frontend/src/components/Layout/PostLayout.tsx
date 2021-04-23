@@ -3,9 +3,9 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React, { FC } from "react";
-import { HasAuthMobile } from "../components/HasAuth";
-import Layout from "../components/Layout";
-import { useMeQuery } from "../generated/graphql";
+import { HasAuthMobile } from "./HasAuth";
+import Layout from "./Layout";
+import { useMeQuery } from "../../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({

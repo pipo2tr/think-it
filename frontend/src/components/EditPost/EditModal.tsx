@@ -1,7 +1,6 @@
-import React, { FC } from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { PostsType } from "../utils/PostsType";
+import React, { FC } from "react";
+import { PostsType } from "../../utils/PostsType";
 import EditPost from "./EditPost";
 
 

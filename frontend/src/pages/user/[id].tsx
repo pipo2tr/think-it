@@ -5,18 +5,18 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Layout from "../../components/Layout";
+import Layout from "../../components/Layout/Layout";
 import { withApollo } from "../../utils/withApollo";
 import Container from "@material-ui/core/Container";
 import { Box, Button } from "@material-ui/core";
-import ProfileCard from "../../components/ProfileCard";
+import ProfileCard from "../../components/UserProfile/ProfileCard";
 import {
 	useGetUserByIdQuery,
 	usePostsByUserQuery,
 } from "../../generated/graphql";
 import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroll-component";
-import PostAccordion from "../../components/PostAccordian";
+import PostAccordion from "../../components/UserProfile/PostAccordian";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {

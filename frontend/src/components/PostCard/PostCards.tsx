@@ -12,11 +12,10 @@ import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import ShareIcon from "@material-ui/icons/Share";
 import Link from "next/link";
 import React, { FC, useState } from "react";
-import { useMeQuery } from "../generated/graphql";
-import { PostsType } from "../utils/PostsType";
-import EditModal from "./EditModal";
+import { useMeQuery } from "../../generated/graphql";
+import { PostsType } from "../../utils/PostsType";
+import EditModal from "../EditPost/EditModal";
 import PostMenu from "./PostMenu";
-
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {

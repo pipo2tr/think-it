@@ -7,8 +7,8 @@ import CreateIcon from "@material-ui/icons/Create";
 import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import React, { FC } from "react";
-import { useUpdatePostMutation } from "../generated/graphql";
-import { PostsType } from "../utils/PostsType";
+import { useUpdatePostMutation } from "../../generated/graphql";
+import { PostsType } from "../../utils/PostsType";
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		display: "flex",

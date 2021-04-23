@@ -1,8 +1,8 @@
 import { Button } from "@material-ui/core";
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import PostCards from "../components/PostCards";
-import PostLayout from "../components/PostLayout";
+import PostCards from "../components/PostCard/PostCards";
+import PostLayout from "../components/Layout/PostLayout";
 import { usePostsQuery } from "../generated/graphql";
 import { withApollo } from "../utils/withApollo";
 

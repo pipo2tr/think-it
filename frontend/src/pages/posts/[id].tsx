@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
-import PostCards from "../../components/PostCards";
-import PostLayout from "../../components/PostLayout";
+import PostCards from "../../components/PostCard/PostCards";
+import PostLayout from "../../components/Layout/PostLayout";
 import { usePostQuery } from "../../generated/graphql";
 import { withApollo } from "../../utils/withApollo";
 

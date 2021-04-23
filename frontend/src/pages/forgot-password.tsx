@@ -10,7 +10,7 @@ import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import Link from "next/link";
 import React, { useState } from "react";
-import Layout from "../components/Layout";
+import Layout from "../components/Layout/Layout";
 import { useForgotPasswordMutation } from "../generated/graphql";
 import { withApollo } from "../utils/withApollo";
 

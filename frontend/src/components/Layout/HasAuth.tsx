@@ -15,7 +15,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import ExploreIcon from "@material-ui/icons/Explore";
 import Link from "next/link";
 import React from "react";
-import { useLogoutMutation, useMeQuery } from "../generated/graphql";
+import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		menuButton: {

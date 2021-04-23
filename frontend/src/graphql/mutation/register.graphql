@@ -1,9 +1,7 @@
 mutation Register($input: UserRegisterType!) {
 	register(input: $input) {
 		user {
-			id
-			username
-			role
+			...MinUser
 		}
 		errors {
 			field

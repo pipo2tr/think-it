@@ -10,6 +10,7 @@ import {
 	UpdateDateColumn,
 } from "typeorm";
 import { Post } from "./Post";
+import { Vote } from "./Vote";
 
 @ObjectType()
 @Entity()
@@ -36,6 +37,9 @@ export class User extends BaseEntity {
 	@Column({ type: "enum", default: Role.USER, enum:Role })
 	role!: Role;
 
+	@OneToMany(()=> Vote, (vote) => vote.user)
+	votes: Vote[]
+	
 	@Field(() => Date)
 	@CreateDateColumn()
 	createdAt: string;

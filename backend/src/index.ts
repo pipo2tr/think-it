@@ -14,6 +14,7 @@ import { User } from "./entities/User";
 import cors from "cors";
 import env from "dotenv";
 import path from "path";
+import { Vote } from "./entities/Vote";
 
 const main = async () => {
 	env.config();
@@ -24,7 +25,7 @@ const main = async () => {
 		password: "siddharth",
 		synchronize: true,
 		logging: !PROD,
-		entities: [Post, User],
+		entities: [Post, User, Vote],
 		migrations: [path.join(__dirname, "./migrations/*")],
 	});
 	await dbConnect.runMigrations();

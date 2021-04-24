@@ -24,6 +24,7 @@ import DeleteForeverRoundedIcon from "@material-ui/icons/DeleteForeverRounded";
 import AlertDialog from "../Utils/AlertDialog";
 import CreatePost from "../EditPost/CreatePost";
 import PostModal from "../EditPost/PostModal";
+import { useRouter } from "next/router";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		menuButton: {
@@ -55,7 +56,6 @@ interface HasAuthMobileProps {
 export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 	handleMobileMenuClose,
 }) => {
-	const apollo = useApolloClient();
 	const classes = useStyles();
 	const [deleteMe] = useDeleteMeMutation();
 	const [open, setOpen] = useState(false);
@@ -63,9 +63,10 @@ export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 	const { data } = useMeQuery();
 	const [logout] = useLogoutMutation();
 	const [openModal, setOpenModal] = useState(false);
+	const router = useRouter();
 	const handleLogout = async () => {
 		await logout();
-		await apollo.resetStore();
+		router.reload();
 	};
 
 	const handleClick = () => {
@@ -76,7 +77,6 @@ export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 		setOpenDailoge(true);
 	};
 	const handleClose = () => {
-		
 		setOpenDailoge(false);
 	};
 	const handleCloseModal = () => {
@@ -86,8 +86,7 @@ export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 
 	const handleDeleteMe = async () => {
 		await deleteMe();
-		await apollo.resetStore();
-		setOpenDailoge(false);
+		router.reload();
 	};
 
 	const modalOpener = () => {

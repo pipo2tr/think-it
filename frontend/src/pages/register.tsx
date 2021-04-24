@@ -51,7 +51,8 @@ const register = () => {
 		onSubmit: async (values, { setErrors }) => {
 			const res = await register({
 				variables: { input: values },
-				update: (cache, {data}) => {
+				update: (cache, { data }) => {
+					cache.evict({ fieldName: "posts" });
 					cache.writeQuery<MeQuery>({
 						query: MeDocument,
 						data: {

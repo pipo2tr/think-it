@@ -5,6 +5,7 @@ fragment PostFrag on Post {
 	creatorId
 	createdAt
 	updatedAt
+	voteStatus
 	creator {
 		id
 		username

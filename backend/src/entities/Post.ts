@@ -7,8 +7,10 @@ import {
 	CreateDateColumn,
 	UpdateDateColumn,
 	ManyToOne,
+	OneToMany,
 } from "typeorm";
 import { User } from "./User";
+import { Vote } from "./Vote";
 
 @ObjectType()
 @Entity()
@@ -33,6 +35,12 @@ export class Post extends BaseEntity {
 	@ManyToOne(() => User, (user) => user.posts)
 	creator: User;
 
+	@OneToMany(() => Vote, (vote) => vote.post)
+	votes: Vote[];
+
+	@Field(() => Boolean, { nullable: true })
+	voteStatus: boolean | null;
+
 	@Field(() => Date)
 	@CreateDateColumn()
 	createdAt: string;
@@ -40,5 +48,4 @@ export class Post extends BaseEntity {
 	@Field(() => Date)
 	@UpdateDateColumn()
 	updatedAt: string;
-
 }

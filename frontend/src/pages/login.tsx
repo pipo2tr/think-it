@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const login =() =>{
+const login = () => {
 	const [login, { loading }] = useLoginMutation();
 	const router = useRouter();
 	const classes = useStyles();
@@ -53,6 +53,7 @@ const login =() =>{
 					input: values,
 				},
 				update: (cache, { data }) => {
+					cache.evict({ fieldName: "posts" });
 					cache.writeQuery<MeQuery>({
 						query: MeDocument,
 						data: {
@@ -71,96 +72,92 @@ const login =() =>{
 	});
 	return (
 		<Layout layoutWidth="xs">
-				<div className={classes.paper}>
-					<Avatar className={classes.avatar}>
-						<LockOutlinedIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
-						Sign in
-					</Typography>
-					<form
-						className={classes.form}
-						onSubmit={formik.handleSubmit}
+			<div className={classes.paper}>
+				<Avatar className={classes.avatar}>
+					<LockOutlinedIcon />
+				</Avatar>
+				<Typography component="h1" variant="h5">
+					Sign in
+				</Typography>
+				<form className={classes.form} onSubmit={formik.handleSubmit}>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						id="usernameOremail"
+						label="Username Or Email"
+						name="usernameOremail"
+						autoComplete="usernameOremail"
+						autoFocus
+						value={formik.values.usernameOremail}
+						onChange={formik.handleChange}
+						error={
+							formik.touched.usernameOremail &&
+							Boolean(formik.errors.usernameOremail)
+						}
+						helperText={
+							formik.touched.usernameOremail &&
+							formik.errors.usernameOremail
+						}
+					/>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						name="password"
+						label="Password"
+						type="password"
+						id="password"
+						autoComplete="current-password"
+						value={formik.values.password}
+						onChange={formik.handleChange}
+						error={
+							formik.touched.password &&
+							Boolean(formik.errors.password)
+						}
+						helperText={
+							formik.touched.password && formik.errors.password
+						}
+					/>
+					<LoadingButton
+						pending={loading}
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						className={classes.submit}
 					>
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="usernameOremail"
-							label="Username Or Email"
-							name="usernameOremail"
-							autoComplete="usernameOremail"
-							autoFocus
-							value={formik.values.usernameOremail}
-							onChange={formik.handleChange}
-							error={
-								formik.touched.usernameOremail &&
-								Boolean(formik.errors.usernameOremail)
-							}
-							helperText={
-								formik.touched.usernameOremail &&
-								formik.errors.usernameOremail
-							}
-						/>
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							name="password"
-							label="Password"
-							type="password"
-							id="password"
-							autoComplete="current-password"
-							value={formik.values.password}
-							onChange={formik.handleChange}
-							error={
-								formik.touched.password &&
-								Boolean(formik.errors.password)
-							}
-							helperText={
-								formik.touched.password &&
-								formik.errors.password
-							}
-						/>
-						<LoadingButton
-							pending={loading}
-							type="submit"
-							fullWidth
-							variant="contained"
-							color="primary"
-							className={classes.submit}
-						>
-							Login
-						</LoadingButton>
-						<Grid container>
-							<Grid item xs>
-								<Link href="/forgot-password">
-									<Typography
-										component="p"
-										variant="subtitle2"
-										className={classes.link}
-									>
-										Forgot password?
-									</Typography>
-								</Link>
-							</Grid>
-							<Grid item>
-								<Link href="/register">
-									<Typography
-										component="p"
-										variant="subtitle2"
-										className={classes.link}
-									>
-										Don't have an account? Sign Up
-									</Typography>
-								</Link>
-							</Grid>
+						Login
+					</LoadingButton>
+					<Grid container>
+						<Grid item xs>
+							<Link href="/forgot-password">
+								<Typography
+									component="p"
+									variant="subtitle2"
+									className={classes.link}
+								>
+									Forgot password?
+								</Typography>
+							</Link>
 						</Grid>
-					</form>
-				</div>
+						<Grid item>
+							<Link href="/register">
+								<Typography
+									component="p"
+									variant="subtitle2"
+									className={classes.link}
+								>
+									Don't have an account? Sign Up
+								</Typography>
+							</Link>
+						</Grid>
+					</Grid>
+				</form>
+			</div>
 		</Layout>
 	);
-}
-export default withApollo({ssr: false})(login)
+};
+export default withApollo({ ssr: false })(login);

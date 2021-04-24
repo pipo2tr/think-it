@@ -17,6 +17,8 @@ import { User } from "../entities/User";
 import { UserLoader } from "../utils/UserLoader";
 import { isBanned } from "../middleware/isBanned";
 import { PaginatedPost } from "../utils/ResolverTypes/PaginatedPostType";
+import { Vote } from "../entities/Vote";
+import { VoteLoader } from "../utils/VoteLoader";
 
 @Resolver(Post)
 export class PostResolver {
@@ -24,6 +26,19 @@ export class PostResolver {
 	@FieldResolver(() => User)
 	creator(@Root() post: Post) {
 		return UserLoader.load(post.creatorId);
+	}
+
+	// load all voteStatus
+	@FieldResolver(() => User)
+	async voteStatus(@Root() post: Post, @Ctx() { req }: GraphQlCxt) {
+		if (!req.session.userId) {
+			return null;
+		}
+		const vote = await VoteLoader.load({
+			postId: post.id,
+			userId: req.session.userId,
+		});
+		return vote ? vote.isVoted : null;
 	}
 
 	@Query(() => PaginatedPost, { nullable: true })
@@ -115,7 +130,7 @@ export class PostResolver {
 	@UseMiddleware(isAuthenticated)
 	@UseMiddleware(isBanned)
 	async deletePost(
-		@Arg("id", ()=> Int) id: number,
+		@Arg("id", () => Int) id: number,
 		@Ctx() { req }: GraphQlCxt
 	): Promise<boolean> {
 		const post = await Post.findOne({
@@ -129,5 +144,56 @@ export class PostResolver {
 		await Post.delete({ id });
 
 		return true;
+	}
+
+	@Mutation(() => Boolean)
+	@UseMiddleware(isAuthenticated)
+	@UseMiddleware(isBanned)
+	async voting(
+		@Arg("postId", () => Int) postId: number,
+		@Ctx() { req }: GraphQlCxt
+	): Promise<boolean> {
+		const userId = req.session.userId;
+		const like = await Vote.findOne({ where: { postId, userId } });
+
+		if (!like) {
+			await getConnection().transaction(async (tm) => {
+				await tm.query(
+					`
+				insert into vote ("userId", "postId", "isVoted")
+				values ($1, $2, $3)
+				`,
+					[userId, postId, true]
+				);
+				await tm.query(
+					`
+					update post
+					set points = points + $1
+					where id = $2
+				  `,
+					[1, postId]
+				);
+			});
+			return true;
+		}
+
+		await getConnection().transaction(async (tm) => {
+			await tm.query(
+				`
+					delete from vote
+					where "postId" = $1 and "userId" = $2
+				`,
+				[postId, userId]
+			);
+			await tm.query(
+				`
+					update post
+					set points = points + $1
+					where id = $2
+				  `,
+				[-1, postId]
+			);
+		});
+		return false;
 	}
 }

@@ -16,6 +16,8 @@ import env from "dotenv";
 import path from "path";
 import { Vote } from "./entities/Vote";
 import { PostComment } from "./entities/PostComment";
+import { UserLoader } from "./utils/loaders/UserLoader";
+import { VoteLoader } from "./utils/loaders/VoteLoader";
 
 const main = async () => {
 	env.config();
@@ -69,6 +71,9 @@ const main = async () => {
 			req,
 			res,
 			redis,
+			userLoader: UserLoader(),
+			voteLoader: VoteLoader()
+			
 		}),
 	});
 	apolloServer.applyMiddleware({ app, cors: false });

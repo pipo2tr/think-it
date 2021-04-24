@@ -1,20 +1,19 @@
-import { Post } from "../entities/Post";
-import { PostComment } from "../entities/PostComment";
-import { isAuthenticated } from "../middleware/isAuthenticated";
-import { GraphQlCxt } from "../types/GraphQlCtx";
 import { Arg, Ctx, FieldResolver, Int, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";
 import { getConnection, getRepository } from "typeorm";
-import { PaginatedComments } from "../utils/ResolverTypes/PaginatedComments";
+import { Post } from "../entities/Post";
+import { PostComment } from "../entities/PostComment";
 import { User } from "../entities/User";
-import { UserLoader } from "../utils/UserLoader";
+import { isAuthenticated } from "../middleware/isAuthenticated";
+import { GraphQlCxt } from "../types/GraphQlCtx";
+import { PaginatedComments } from "../utils/ResolverTypes/PaginatedComments";
 
 @Resolver(PostComment)
 export class PostCommentResolver {
 
 	// fetch creator data
 	@FieldResolver(() => User)
-	user(@Root() comment: PostComment) {
-		return UserLoader.load(comment.userId);
+	user(@Root() comment: PostComment, @Ctx() {userLoader}:GraphQlCxt) {
+		return userLoader.load(comment.userId);
 	}
 
 	@Query(() => PaginatedComments)

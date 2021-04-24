@@ -17,24 +17,22 @@ import { isAuthenticated } from "../middleware/isAuthenticated";
 import { isBanned } from "../middleware/isBanned";
 import { GraphQlCxt } from "../types/GraphQlCtx";
 import { PaginatedPost } from "../utils/ResolverTypes/PaginatedPostType";
-import { UserLoader } from "../utils/UserLoader";
-import { VoteLoader } from "../utils/VoteLoader";
 
 @Resolver(Post)
 export class PostResolver {
 	// fetch creator data
 	@FieldResolver(() => User)
-	creator(@Root() post: Post) {
-		return UserLoader.load(post.creatorId);
+	creator(@Root() post: Post, @Ctx() {userLoader}: GraphQlCxt) {
+		return userLoader.load(post.creatorId)
 	}
 
 	// load all voteStatus
 	@FieldResolver(() => User)
-	async voteStatus(@Root() post: Post, @Ctx() { req }: GraphQlCxt) {
+	async voteStatus(@Root() post: Post, @Ctx() { req, voteLoader }: GraphQlCxt) {
 		if (!req.session.userId) {
 			return null;
 		}
-		const vote = await VoteLoader.load({
+		const vote = await voteLoader.load({
 			postId: post.id,
 			userId: req.session.userId,
 		});
@@ -57,7 +55,6 @@ export class PostResolver {
 			.skip(skip)
 			.take(limitplus1)
 			.getMany();
-		console.log(posts.length);
 		return {
 			posts: posts.slice(0, limit),
 			hasMore: posts.length === limitplus1,

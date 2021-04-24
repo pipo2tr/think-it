@@ -5,5 +5,6 @@ export type MinPostType = {
 	id: Scalars["Float"];
 	text: Scalars["String"];
 	points: Scalars["Float"];
+	numComments: Scalars['Float'];
 	createdAt: Scalars["DateTime"];
 };

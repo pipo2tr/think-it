@@ -6,6 +6,7 @@ fragment PostFrag on Post {
 	createdAt
 	updatedAt
 	voteStatus
+	numComments
 	creator {
 		id
 		username

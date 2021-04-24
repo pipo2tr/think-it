@@ -1,4 +1,3 @@
-import { Post } from "../entities/Post";
 import {
 	Arg,
 	Ctx,
@@ -8,16 +7,17 @@ import {
 	Query,
 	Resolver,
 	Root,
-	UseMiddleware,
+	UseMiddleware
 } from "type-graphql";
 import { getConnection, getRepository } from "typeorm";
-import { GraphQlCxt } from "../types/GraphQlCtx";
-import { isAuthenticated } from "../middleware/isAuthenticated";
+import { Post } from "../entities/Post";
 import { User } from "../entities/User";
-import { UserLoader } from "../utils/UserLoader";
-import { isBanned } from "../middleware/isBanned";
-import { PaginatedPost } from "../utils/ResolverTypes/PaginatedPostType";
 import { Vote } from "../entities/Vote";
+import { isAuthenticated } from "../middleware/isAuthenticated";
+import { isBanned } from "../middleware/isBanned";
+import { GraphQlCxt } from "../types/GraphQlCtx";
+import { PaginatedPost } from "../utils/ResolverTypes/PaginatedPostType";
+import { UserLoader } from "../utils/UserLoader";
 import { VoteLoader } from "../utils/VoteLoader";
 
 @Resolver(Post)
@@ -196,4 +196,5 @@ export class PostResolver {
 		});
 		return false;
 	}
+
 }

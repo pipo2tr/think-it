@@ -7,6 +7,7 @@ export type PostsType = {
 	points: Scalars["Float"];
 	creatorId: Scalars["Float"];
 	voteStatus?: Maybe<Scalars['Boolean']>;
+	numComments: Scalars['Float'];
 	creator: {
 		id: Scalars["Float"];
 		username: Scalars["String"];

@@ -1,0 +1,16 @@
+query CommentsOnPost($postId: Int!, $limit: Int!, $skip: Int!) {
+	commentsOnPost(postId: $postId, limit: $limit, skip: $skip) {
+		comments {
+			id
+			text
+			userId
+			postId
+			createdAt
+			user {
+				id
+				username
+			}
+		}
+		hasMore
+	}
+}

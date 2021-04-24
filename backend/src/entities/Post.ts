@@ -9,6 +9,7 @@ import {
 	ManyToOne,
 	OneToMany,
 } from "typeorm";
+import { PostComment } from "./PostComment";
 import { User } from "./User";
 import { Vote } from "./Vote";
 
@@ -28,6 +29,10 @@ export class Post extends BaseEntity {
 	points: number;
 
 	@Field()
+	@Column({ type: "int", default: 0, nullable: true })
+	numComments: number;
+
+	@Field()
 	@Column()
 	creatorId!: number;
 
@@ -40,6 +45,9 @@ export class Post extends BaseEntity {
 
 	@Field(() => Boolean, { nullable: true })
 	voteStatus: boolean | null;
+
+	@OneToMany(()=> PostComment, (comment) => comment.post, {nullable: true})
+	comments: PostComment[] | null
 
 	@Field(() => Date)
 	@CreateDateColumn()

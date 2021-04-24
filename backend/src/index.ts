@@ -3,7 +3,7 @@ import { ApolloServer } from "apollo-server-express";
 import { createConnection } from "typeorm";
 import { COOKIE_NAME, COOKIE_SECRET, PROD } from "./consts";
 import { buildSchema } from "type-graphql";
-import { TestResolver } from "./resolver/test";
+import { PostCommentResolver } from "./resolver/postComments";
 import { Post } from "./entities/Post";
 import { PostResolver } from "./resolver/post";
 import Redis from "ioredis";
@@ -15,6 +15,7 @@ import cors from "cors";
 import env from "dotenv";
 import path from "path";
 import { Vote } from "./entities/Vote";
+import { PostComment } from "./entities/PostComment";
 
 const main = async () => {
 	env.config();
@@ -25,10 +26,10 @@ const main = async () => {
 		password: "siddharth",
 		synchronize: true,
 		logging: !PROD,
-		entities: [Post, User, Vote],
+		entities: [Post, User, Vote, PostComment],
 		migrations: [path.join(__dirname, "./migrations/*")],
 	});
-	await dbConnect.runMigrations();
+	// await dbConnect.runMigrations();
 	const app = express();
 
 	app.set("trust proxy", 1);
@@ -61,7 +62,7 @@ const main = async () => {
 
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({
-			resolvers: [TestResolver, PostResolver, UserResolver],
+			resolvers: [PostCommentResolver, PostResolver, UserResolver],
 			validate: false,
 		}),
 		context: ({ req, res }) => ({

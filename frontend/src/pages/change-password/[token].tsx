@@ -1,5 +1,4 @@
 import Avatar from "@material-ui/core/Avatar";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -8,9 +7,9 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Layout from "../../components/Layout/Layout";
-import { useRouter } from "next/router";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { mapError } from "../../utils/mapError";
 

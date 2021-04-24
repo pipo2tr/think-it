@@ -5,11 +5,8 @@ import Typography from "@material-ui/core/Typography";
 import CreateIcon from "@material-ui/icons/Create";
 import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
-import { useRouter } from "next/router";
 import React, { FC } from "react";
-import Layout from "../Layout/Layout";
 import { useCreatePostMutation } from "../../generated/graphql";
-import { PostsType } from "../../utils/PostsType";
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		display: "flex",

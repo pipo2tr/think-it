@@ -1,7 +1,5 @@
 import Modal from "@material-ui/core/Modal";
 import React, { FC } from "react";
-import { PostsType } from "../../utils/PostsType";
-import EditPost from "./EditPost";
 
 interface PostModalProps {
 	handleClose: () => void;

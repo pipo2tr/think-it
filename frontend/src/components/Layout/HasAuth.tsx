@@ -1,4 +1,3 @@
-import { useApolloClient } from "@apollo/client";
 import { Avatar, createStyles, makeStyles, Theme } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
 import { red } from "@material-ui/core/colors";
@@ -9,22 +8,21 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import CreateIcon from "@material-ui/icons/Create";
+import DeleteForeverRoundedIcon from "@material-ui/icons/DeleteForeverRounded";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import ExploreIcon from "@material-ui/icons/Explore";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { FC, useState } from "react";
 import {
 	useDeleteMeMutation,
 	useLogoutMutation,
-	useMeQuery,
+	useMeQuery
 } from "../../generated/graphql";
-import DeleteForeverRoundedIcon from "@material-ui/icons/DeleteForeverRounded";
-import AlertDialog from "../Utils/AlertDialog";
 import CreatePost from "../EditPost/CreatePost";
 import PostModal from "../EditPost/PostModal";
-import { useRouter } from "next/router";
+import AlertDialog from "../Utils/AlertDialog";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		menuButton: {

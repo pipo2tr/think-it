@@ -1,22 +1,17 @@
-import React from "react";
-import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
+import { Box } from "@material-ui/core";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { useRouter } from "next/router";
+import React from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Layout from "../../components/Layout/Layout";
-import { withApollo } from "../../utils/withApollo";
-import Container from "@material-ui/core/Container";
-import { Box, Button } from "@material-ui/core";
+import PostAccordion from "../../components/UserProfile/PostAccordian";
 import ProfileCard from "../../components/UserProfile/ProfileCard";
 import {
 	useGetUserByIdQuery,
 	usePostsByUserQuery,
 } from "../../generated/graphql";
-import { useRouter } from "next/router";
-import InfiniteScroll from "react-infinite-scroll-component";
-import PostAccordion from "../../components/UserProfile/PostAccordian";
+import { withApollo } from "../../utils/withApollo";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -44,8 +39,8 @@ const useStyles = makeStyles((theme: Theme) =>
 			justifyContent: "space-between",
 		},
 		post: {
-			margin: "auto"
-		}
+			margin: "auto",
+		},
 	})
 );
 

@@ -1,11 +1,10 @@
-import { Backdrop, Button, CircularProgress } from "@material-ui/core";
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import PostCards from "../components/PostCard/PostCards";
 import PostLayout from "../components/Layout/PostLayout";
+import PostCards from "../components/PostCard/PostCards";
+import BackDrop from "../components/Utils/BackDrop";
 import { usePostsQuery } from "../generated/graphql";
 import { withApollo } from "../utils/withApollo";
-import BackDrop from "../components/Utils/BackDrop";
 
 const Home = () => {
 	const { data, fetchMore } = usePostsQuery({

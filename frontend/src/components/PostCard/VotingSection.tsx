@@ -1,15 +1,34 @@
 import IconButton from "@material-ui/core/IconButton";
 import React, { FC } from "react";
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useVotingMutation } from "../../generated/graphql";
 import { gql } from "@apollo/client";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { formatNumber } from "../../utils/formatNumber";
+
+const useStyles = makeStyles((theme: Theme) =>
+	createStyles({
+		like: {
+			fontSize: 16,
+		},
+		counter: {
+			padding: 5,
+		},
+		bigIcon: {
+			width: 24,
+			height: 24,
+		},
+	})
+);
 
 interface VotingSectionProps {
 	voteStatus: boolean | null;
 	id: number;
+	points: number;
 }
 
-const VotingSection: FC<VotingSectionProps> = ({ voteStatus, id }) => {
+const VotingSection: FC<VotingSectionProps> = ({ voteStatus, id, points }) => {
+	const classes = useStyles();
 	const [vote] = useVotingMutation();
 
 	const handleVoting = async (postId) => {
@@ -51,11 +70,24 @@ const VotingSection: FC<VotingSectionProps> = ({ voteStatus, id }) => {
 				}
 			},
 		});
-
 	};
 	return (
-		<IconButton aria-label="like" onClick={() => handleVoting(id)}>
-			<FavoriteIcon color={voteStatus ? "secondary" : "inherit"} />
+		<IconButton
+			aria-label="like"
+			onClick={() => handleVoting(id)}
+			className={classes.like}
+		>
+			<FavoriteIcon
+				color={voteStatus ? "secondary" : "inherit"}
+				className={classes.bigIcon}
+			/>
+			<span
+				className={classes.counter}
+				style={{ color: voteStatus ? "#f50057" : "inherit" }}
+			>
+				{/* {formatNumber(points)} */}
+				{points}
+			</span>
 		</IconButton>
 	);
 };

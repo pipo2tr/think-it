@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			display: "flex",
 			justifyContent: "space-around",
 			alignItems: "center",
+			padding: "0"
 		},
 	})
 );
@@ -116,7 +117,7 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 			</CardContent>
 			{meData?.me ? (
 				<CardActions className={classes.action}>
-					<VotingSection id={post.id} voteStatus={post.voteStatus} />
+					<VotingSection id={post.id} voteStatus={post.voteStatus} points={post.points} />
 					<IconButton aria-label="share">
 						<ShareIcon />
 					</IconButton>

@@ -52,7 +52,7 @@ const EditPost: FC<EditPostProps> = ({ post, handleClose }) => {
 					cache.writeFragment({
 						id: "Post:" + post.id,
 						fragment: gql`
-						  fragment __ on Post {
+						  fragment ___ on Post {
 							text
 						  }
 						`,

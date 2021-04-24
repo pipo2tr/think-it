@@ -36,7 +36,7 @@ const VotingSection: FC<VotingSectionProps> = ({ voteStatus, id }) => {
 					cache.writeFragment({
 						id: "Post:" + postId,
 						fragment: gql`
-							fragment _ on Post {
+							fragment __ on Post {
 								points
 								voteStatus
 							}

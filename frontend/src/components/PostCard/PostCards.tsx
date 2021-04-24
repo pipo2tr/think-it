@@ -49,7 +49,6 @@ const useStyles = makeStyles((theme: Theme) =>
 			display: "flex",
 			justifyContent: "space-around",
 			alignItems: "center",
-			width:"100%"
 		},
 	})
 );
@@ -95,7 +94,6 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 						</IconButton>
 					) : null
 				}
-				// title={`@${post.creator.username}`}
 				title={
 					<div className={classes.title}>
 						@{post.creator.username}
@@ -107,24 +105,26 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 			<CardContent>
 				<Link href="/posts/[id]" as={`/posts/${post.id}`}>
 					<Typography
-						variant="body2"
+						variant="subtitle1"
 						color="textSecondary"
-						component="p"
+						component="div"
 						className={classes.text}
 					>
 						{post.text}
 					</Typography>
 				</Link>
 			</CardContent>
-			{meData?.me ? <CardActions className={classes.action}>
-				<VotingSection id={post.id} voteStatus={post.voteStatus} />
-				<IconButton aria-label="share">
-					<ShareIcon />
-				</IconButton>
-				<IconButton aria-label="share">
-					<CommentIcon />
-				</IconButton>
-			</CardActions>: null}
+			{meData?.me ? (
+				<CardActions className={classes.action}>
+					<VotingSection id={post.id} voteStatus={post.voteStatus} />
+					<IconButton aria-label="share">
+						<ShareIcon />
+					</IconButton>
+					<IconButton aria-label="share">
+						<CommentIcon />
+					</IconButton>
+				</CardActions>
+			) : null}
 			<PostMenu
 				anchorEl={anchorEl}
 				handleClose={handleClose}

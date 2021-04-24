@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface HasAuthMobileProps {
-	handleMobileMenuClose: () => void;
+	handleMobileMenuClose?: () => void;
 }
 
 export const HasAuthMobile: FC<HasAuthMobileProps> = ({

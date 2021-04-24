@@ -27,13 +27,13 @@ const post = () => {
 	if (!data?.post) return <BackDrop />;
 	return (
 		<PostLayout>
-			<PostCards post={data.post} />
+			<PostCards post={data.post}/>
 			{commentData ? (
 				commentData?.commentsOnPost?.comments?.map((comment) => (
-					<CommentAccordion comment={comment} key={ comment.id}/>
+					<CommentAccordion comment={comment} key={comment.id}/>
 				))
 			) : (
-				<div>This post has no comment</div>
+				<div>Something Went wrong</div>
 			)}
 		</PostLayout>
 	);

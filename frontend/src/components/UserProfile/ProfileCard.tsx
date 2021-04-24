@@ -70,8 +70,6 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser }) => {
 		</div>
 	);
 
-	console.log(data?.me?.role >= 3);
-
 	return (
 		<Card className={classes.root}>
 			<CardActionArea>

@@ -17,7 +17,8 @@ import EditPost from "../EditPost/EditPost";
 import PostModal from "../EditPost/PostModal";
 import PostMenu from "./PostMenu";
 import VotingSection from "./VotingSection";
-import CommentIcon from "@material-ui/icons/Comment";
+import CommentButton from "../CommentSection/CommentButton";
+import AddCommentModal from "../CommentSection/AddCommentModal";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			display: "flex",
 			justifyContent: "space-around",
 			alignItems: "center",
-			padding: "0"
+			padding: "0",
 		},
 	})
 );
@@ -62,7 +63,7 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const [openModal, setOpen] = useState(false);
-
+	const [openCommentModal, setOpenCommentModal] = useState(false)
 	const modalOpener = () => {
 		setOpen(true);
 	};
@@ -75,7 +76,12 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 		setAnchorEl(null);
 		setOpen(false);
 	};
-
+	const handleCloseCommentModal = () => {
+		setOpenCommentModal(false)
+	};
+	const handleOpenCommentModal = () => {
+		setOpenCommentModal(true)
+	}
 	return (
 		<Card className={classes.root} key={post.id}>
 			<CardHeader
@@ -117,13 +123,15 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 			</CardContent>
 			{meData?.me ? (
 				<CardActions className={classes.action}>
-					<VotingSection id={post.id} voteStatus={post.voteStatus} points={post.points} />
+					<VotingSection
+						id={post.id}
+						voteStatus={post.voteStatus}
+						points={post.points}
+					/>
 					<IconButton aria-label="share">
 						<ShareIcon />
 					</IconButton>
-					<IconButton aria-label="share">
-						<CommentIcon />
-					</IconButton>
+					<CommentButton points={post.numComments} handleOpen={ handleOpenCommentModal}/>
 				</CardActions>
 			) : null}
 			<PostMenu
@@ -135,6 +143,9 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 			/>
 			<PostModal handleClose={handleClose} openModal={openModal}>
 				<EditPost post={post} handleClose={handleClose} />
+			</PostModal>
+			<PostModal handleClose={handleCloseCommentModal} openModal={openCommentModal}>
+				<AddCommentModal postId={post.id} handleClose={handleCloseCommentModal} />
 			</PostModal>
 		</Card>
 	);

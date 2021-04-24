@@ -83,7 +83,7 @@ const userProfile = () => {
 		});
 	};
 	const PostsAccordion = postData?.postsByUser?.posts.map((post) => (
-		<PostAccordion post={post} />
+		<PostAccordion post={post} key={ post.id}/>
 	));
 
 	return (

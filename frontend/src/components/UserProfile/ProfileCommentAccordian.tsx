@@ -6,7 +6,6 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Link from "next/link";
 import React, { FC } from "react";
-import { CommentType } from "../../utils/CommentType";
 import { minCommentType } from "../../utils/minCommentType";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({

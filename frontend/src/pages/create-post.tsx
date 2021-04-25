@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import Layout from "../components/Layout/Layout";
 import { useCreatePostMutation } from "../generated/graphql";
-import { useIsAuth } from "../utils/useisAuth";
+import { useIsAuth } from "../hooks/useisAuth";
 import { withApollo } from "../utils/withApollo";
 const useStyles = makeStyles((theme) => ({
 	paper: {

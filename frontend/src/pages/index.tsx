@@ -30,25 +30,23 @@ const Home = () => {
 	}
 	return (
 		<PostLayout>
-			<InfiniteScroll
-				dataLength={data?.posts?.posts?.length} //This is important field to render the next data
-				next={moreData}
-				hasMore={data?.posts?.hasMore}
-				loader={<h4>Loading...</h4>}
-				endMessage={
-					<p style={{ textAlign: "center" }}>
-						<b>Yay! You have seen it all</b>
-					</p>
-				}
-			>
-				{!data ? (
-					<div>Loading...</div>
-				) : (
-					data?.posts?.posts?.map((post) => (
+			{data ? (
+				<InfiniteScroll
+					dataLength={data?.posts?.posts?.length} //This is important field to render the next data
+					next={moreData}
+					hasMore={data?.posts?.hasMore}
+					loader={<h4>Loading...</h4>}
+					endMessage={
+						<p style={{ textAlign: "center" }}>
+							<b>Yay! You have seen it all</b>
+						</p>
+					}
+				>
+					{data?.posts?.posts?.map((post) => (
 						<PostCards post={post} key={post.id} />
-					))
-				)}
-			</InfiniteScroll>
+					))}
+				</InfiniteScroll>
+			) : null}
 		</PostLayout>
 	);
 };

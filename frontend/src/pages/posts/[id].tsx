@@ -40,8 +40,8 @@ const post = () => {
 	return (
 		<PostLayout>
 			<PostCards post={data.post} />
-			<InfiniteScroll
-				dataLength={ commentData?.commentsOnPost?.comments?.length} //This is important field to render the next data
+			{commentData ? <InfiniteScroll
+				dataLength={commentData?.commentsOnPost?.comments?.length} //This is important field to render the next data
 				next={fetchMoreComments}
 				hasMore={commentData?.commentsOnPost?.hasMore}
 				loader={<h4>Loading...</h4>}
@@ -54,11 +54,11 @@ const post = () => {
 				{commentData?.commentsOnPost?.comments?.map((comment) => (
 					<CommentAccordion comment={comment} key={comment.id} />
 				))}
-			</InfiniteScroll>
+			</InfiniteScroll> : null}
 		</PostLayout>
 	);
 };
 
-export default withApollo({ ssr: true })(post);
+export default withApollo({ ssr: false })(post);
 
 

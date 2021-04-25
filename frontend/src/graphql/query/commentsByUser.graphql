@@ -4,6 +4,7 @@ query CommentsByUser($userId: Int!, $limit: Int!, $skip: Int!) {
       id
       text
       postId
+      createdAt
     }
     hasMore
   }

@@ -10,6 +10,7 @@ import ProfileCard from "../../components/UserProfile/ProfileCard";
 import BackDrop from "../../components/Utils/BackDrop";
 import TabPanel from "../../components/Tabs/TabPanel";
 import {
+	useCommentsByUserQuery,
 	useGetUserByIdQuery,
 	useMeQuery,
 	usePostsByUserQuery,
@@ -17,6 +18,7 @@ import {
 import { useIsAuth } from "../../hooks/useisAuth";
 import { withApollo } from "../../utils/withApollo";
 import TabContainer from "../../components/Tabs/TabContainer";
+import ProfileCommentAccordian from "../../components/UserProfile/ProfileCommentAccordian";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -31,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
 			fontWeight: theme.typography.fontWeightRegular,
 		},
 		hero: {
-			backgroundImage: "",
 			height: "auto",
 			width: "100%",
 			flexDirection: "row",
@@ -65,10 +66,18 @@ const userProfile = () => {
 	const { data: postData, fetchMore } = usePostsByUserQuery({
 		variables: {
 			id: Id,
-			limit: 10,
+			limit: 30,
 			skip: 0,
 		},
 	});
+
+	const { data: dataComment, fetchMore: fetchMoreComments } = useCommentsByUserQuery({
+		variables: {
+			userId: Id,
+			limit: 30,
+			skip:0
+		}
+	})
 
 	const handlePanel = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setPanel(newValue);
@@ -76,16 +85,7 @@ const userProfile = () => {
 
 	const UserCard = (
 		<Box className={classes.hero}>
-			{data?.getUserById.errors ? (
-				<Typography className={classes.heading}>
-					{data?.getUserById.errors}
-				</Typography>
-			) : (
-				<ProfileCard
-					minUser={data?.getUserById?.user}
-					me={meData?.me}
-				/>
-			)}
+			<ProfileCard minUser={data?.getUserById?.user} me={meData?.me} />
 		</Box>
 	);
 
@@ -93,15 +93,30 @@ const userProfile = () => {
 		fetchMore({
 			variables: {
 				id: Id,
-				limit: 10,
+				limit: 30,
 				skip: postData.postsByUser.posts.length,
 			},
 		});
 	};
+	console.log(dataComment);
+	console.log(router.query.id);
+	
+	const getMoreComments = () => {
+		fetchMoreComments({
+			variables: {
+				userId: Id,
+				limit: 10,
+				skip: dataComment.commentsByUser.comments.length,
+			},
+		});
+	}
+
 	const PostsAccordion = postData?.postsByUser?.posts.map((post) => (
 		<PostAccordion post={post} key={post.id} />
 	));
-
+	const CommentAccordian = (dataComment?.commentsByUser?.comments.map(comment => (
+		<ProfileCommentAccordian comment={comment} key={comment.id}/>
+	)))	
 	const UserPost = (
 		<div className={classes.post}>
 			<InfiniteScroll
@@ -119,21 +134,37 @@ const userProfile = () => {
 			</InfiniteScroll>
 		</div>
 	);
-
-	if (!meData?.me) return <BackDrop />;
+	const UserComments = (
+		<div className={classes.post}>
+		<InfiniteScroll
+			dataLength={dataComment?.commentsByUser?.comments?.length} //This is important field to render the next data
+			next={getMoreComments}
+			hasMore={dataComment?.commentsByUser?.hasMore}
+			loader={<h4>Loading...</h4>}
+			endMessage={
+				<p style={{ textAlign: "center" }}>
+					<b>User Has no more comments</b>
+				</p>
+			}
+		>
+			{CommentAccordian}
+		</InfiniteScroll>
+	</div>
+				)
+	if (!meData && !dataComment && !postData) return <BackDrop />;
 	return (
 		<Layout layoutWidth="md">
 			<div className={classes.root}>{data ? UserCard : <BackDrop />}</div>
 			<TabPanel panel={panel} handlePanel={handlePanel}>
 				<TabContainer index={0} value={panel}>
-					{UserPost}
+					{postData ? UserPost : null}
 				</TabContainer>
 				<TabContainer index={1} value={panel}>
-					comments
+					 {dataComment ? UserComments : null}
 				</TabContainer>
 			</TabPanel>
 		</Layout>
 	);
 };
 
-export default withApollo({ ssr: true })(userProfile);
+export default withApollo({ ssr: false })(userProfile);

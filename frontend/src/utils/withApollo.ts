@@ -1,7 +1,7 @@
 import { withApollo as createWithApollo } from "next-apollo";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { NextPageContext } from "next";
-import {PaginatedComments, PaginatedPost} from "../generated/graphql"
+import { PaginatedComments, PaginatedPost } from "../generated/graphql";
 const createClient = (ctx: NextPageContext) =>
 	new ApolloClient({
 		uri: "http://localhost:4000/graphql",
@@ -11,6 +11,7 @@ const createClient = (ctx: NextPageContext) =>
 				typeof window == "undefined" ? ctx?.req?.headers?.cookie : "",
 		},
 		cache: new InMemoryCache({
+			resultCaching: false,
 			typePolicies: {
 				Query: {
 					fields: {
@@ -30,7 +31,7 @@ const createClient = (ctx: NextPageContext) =>
 							},
 						},
 						postsByUser: {
-							keyArgs: [],
+							keyArgs: ["id"],
 							merge(
 								existing: PaginatedPost | undefined,
 								incoming: PaginatedPost
@@ -45,7 +46,22 @@ const createClient = (ctx: NextPageContext) =>
 							},
 						},
 						commentsOnPost: {
-							keyArgs: [],
+							keyArgs: ["postId"],
+							merge(
+								existing: PaginatedComments | undefined,
+								incoming: PaginatedComments
+							): PaginatedComments {
+								return {
+									...incoming,
+									comments: [
+										...(existing?.comments || []),
+										...incoming.comments,
+									],
+								};
+							},
+						},
+						commentsByUser: {
+							keyArgs: ["userId"],
 							merge(
 								existing: PaginatedComments | undefined,
 								incoming: PaginatedComments

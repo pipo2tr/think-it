@@ -91,6 +91,7 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 							aria-label="post"
 							className={classes.avatar}
 							alt={post.creator.username}
+							src="/static/img/pfp.jpg"
 						/>
 					</Link>
 				}

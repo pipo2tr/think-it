@@ -11,6 +11,7 @@ const Layout: React.FC<LayoutProp> = ({layoutWidth, children}) => {
 		<>
 			<NavBar />
 			<Container component="main" maxWidth={layoutWidth}>
+				{/* Dunno wtf to do */}
 				{children as any}
 			</Container>
 		</>

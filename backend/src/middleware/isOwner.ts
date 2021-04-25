@@ -8,7 +8,7 @@ export const isOwner: MiddlewareFn<GraphQlCxt> = async (
 	next
 ): Promise<any> => {
 	const user = await User.findOne(context.req.session.userId);
-	if (!(user?.username === "Siddharth" || user?.role === Role.OWNER)) {
+	if (!(user?.username === process.env.OWNER || user?.role === Role.OWNER)) {
         throw new Error("You are not the owner");
 	}
 	return next();

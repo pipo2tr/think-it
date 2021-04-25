@@ -14,14 +14,14 @@ export async function sendEmail(to: string, html: string) {
 		host: "smtp.mailtrap.io",
 		port: 2525,
 		auth: {
-			user: "a71fdbfcaad3e3",
-			pass: "040f211fab46b4",
+			user: process.env.EMAIL_USER,
+			pass: process.env.EMAIL_PASSWORD,
 		},
 	});
 
 	// send mail with defined transport object
 	let info = await transporter.sendMail({
-		from: '"zoie 👻" <zoie.sanford35@ethereal.email>', // sender address
+		from: '"Siddharth 😉" <pipo2tr@pipo2tr.com>', // sender address
 		to, // list of receivers
 		subject: "Request for change password", // plain text body
 		html, // html body

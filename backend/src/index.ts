@@ -23,9 +23,10 @@ const main = async () => {
 	env.config();
 	const dbConnect = await createConnection({
 		type: "postgres",
-		database: "thinkit",
-		username: "postgres",
-		password: "siddharth",
+		// database: "thinkit",
+		// username: "postgres",
+		// password: "siddharth",
+		url: process.env.DATABASE_URL,
 		synchronize: true,
 		logging: !PROD,
 		entities: [Post, User, Vote, PostComment],
@@ -37,7 +38,7 @@ const main = async () => {
 	app.set("trust proxy", 1);
 
 	let RedisStore = connsectRedis(session);
-	let redis = new Redis();
+	let redis = new Redis(process.env.REDIS_URL);
 
 	app.use(
 		session({
@@ -77,7 +78,7 @@ const main = async () => {
 		}),
 	});
 	apolloServer.applyMiddleware({ app, cors: false });
-	app.listen(4000, () => {
+	app.listen(process.env.PORT, () => {
 		console.log("listening on http://localhost:4000/graphql");
 	});
 };

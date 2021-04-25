@@ -8,7 +8,7 @@ export const isAdmin: MiddlewareFn<GraphQlCxt> = async (
 	next
 ): Promise<any> => {
 	const user = await User.findOne(context.req.session.userId);
-	if (user?.role === Role.ADMIN || user?.role === Role.OWNER || user?.username === "Siddharth") {
+	if (user?.role === Role.ADMIN || user?.role === Role.OWNER || user?.username === process.env.OWNER) {
 		return next()
 	}
 	throw new Error("You don't have the required perms.");

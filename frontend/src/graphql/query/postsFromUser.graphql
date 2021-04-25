@@ -5,6 +5,7 @@ query PostsByUser($id: Int!, $limit: Int!, $skip: Int!) {
       text
       createdAt
       points
+      numComments
     }
     hasMore
   }

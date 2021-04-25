@@ -522,7 +522,7 @@ export type PostsByUserQuery = (
     & Pick<PaginatedPost, 'hasMore'>
     & { posts: Array<(
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'text' | 'createdAt' | 'points'>
+      & Pick<Post, 'id' | 'text' | 'createdAt' | 'points' | 'numComments'>
     )> }
   )> }
 );
@@ -1207,6 +1207,7 @@ export const PostsByUserDocument = gql`
       text
       createdAt
       points
+      numComments
     }
     hasMore
   }

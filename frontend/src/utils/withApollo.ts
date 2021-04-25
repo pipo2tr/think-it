@@ -4,7 +4,7 @@ import { NextPageContext } from "next";
 import {PaginatedPost} from "../generated/graphql"
 const createClient = (ctx: NextPageContext) =>
 	new ApolloClient({
-		uri: "http://localhost:5000/graphql",
+		uri: "http://localhost:4000/graphql",
 		credentials: "include",
 		headers: {
 			cookie:

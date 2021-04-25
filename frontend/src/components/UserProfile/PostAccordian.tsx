@@ -29,7 +29,7 @@ const PostAccordion: FC<PostAccordianInterface> = ({ post }) => {
 	const classes = useStyles();
 
 	return (
-		<Accordion className={classes.accordion} key={post.id}>
+		<Accordion className={classes.accordion} key={post.id} defaultExpanded>
 			<AccordionSummary
 				expandIcon={<ExpandMoreIcon />}
 				aria-controls="panel1a-content"

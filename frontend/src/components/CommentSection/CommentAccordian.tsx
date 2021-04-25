@@ -26,7 +26,7 @@ const CommentAccordion: FC<CommentAccordianProps> = ({ comment }) => {
 	const classes = useStyles();
 
 	return (
-		<Accordion className={classes.accordion} key={comment.id}>
+		<Accordion className={classes.accordion} key={comment.id} defaultExpanded>
 			<AccordionSummary
 				expandIcon={<ExpandMoreIcon />}
 				aria-controls="panel1a-content"

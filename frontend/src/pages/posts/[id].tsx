@@ -31,7 +31,7 @@ const post = () => {
 			variables: {
 				postId: Id,
 				limit: 30,
-				skip: commentData.commentsOnPost.comments.length,
+				skip: commentData!.commentsOnPost.comments.length,
 			},
 		});
 	};
@@ -40,25 +40,27 @@ const post = () => {
 	return (
 		<PostLayout>
 			<PostCards post={data.post} />
-			{commentData ? <InfiniteScroll
-				dataLength={commentData?.commentsOnPost?.comments?.length} //This is important field to render the next data
-				next={fetchMoreComments}
-				hasMore={commentData?.commentsOnPost?.hasMore}
-				loader={<h4>Loading...</h4>}
-				endMessage={
-					<p style={{ textAlign: "center" }}>
-						<b>End of comments</b>
-					</p>
-				}
-			>
-				{commentData?.commentsOnPost?.comments?.map((comment) => (
-					<CommentAccordion comment={comment} key={comment.id} />
-				))}
-			</InfiniteScroll> : <BackDrop />}
+			{commentData ? (
+				<InfiniteScroll
+					dataLength={commentData?.commentsOnPost?.comments?.length} //This is important field to render the next data
+					next={fetchMoreComments}
+					hasMore={commentData?.commentsOnPost?.hasMore}
+					loader={<h4>Loading...</h4>}
+					endMessage={
+						<p style={{ textAlign: "center" }}>
+							<b>End of comments</b>
+						</p>
+					}
+				>
+					{commentData?.commentsOnPost?.comments?.map((comment) => (
+						<CommentAccordion comment={comment} key={comment.id} />
+					))}
+				</InfiniteScroll>
+			) : (
+				<BackDrop />
+			)}
 		</PostLayout>
 	);
 };
 
 export default withApollo({ ssr: true })(post);
-
-

@@ -7,7 +7,7 @@ import CreateIcon from "@material-ui/icons/Create";
 import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import React, { FC } from "react";
-import { useAddCommentMutation, useCreatePostMutation } from "../../generated/graphql";
+import { useAddCommentMutation } from "../../generated/graphql";
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		display: "flex",

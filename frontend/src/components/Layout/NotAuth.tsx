@@ -8,7 +8,6 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import Link from "next/link";
 import React from "react";
-import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		menuButton: {

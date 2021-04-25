@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 
-interface ThinkItProps{
-	height?: number,
-	width?: number
+interface ThinkItProps {
+	height?: number;
+	width?: number;
 }
 
-const ThinkIt: FC<ThinkItProps> = ({height=16, width=16}) => {
+const ThinkIt: FC<ThinkItProps> = ({ height = 16, width = 16 }) => {
 	return (
 		<svg
 			width={width + ""}

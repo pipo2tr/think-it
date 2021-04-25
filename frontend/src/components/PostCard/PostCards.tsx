@@ -125,7 +125,7 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 				<CardActions className={classes.action}>
 					<VotingSection
 						id={post.id}
-						voteStatus={post.voteStatus}
+						voteStatus={post.voteStatus || null}
 						points={post.points}
 					/>
 					<IconButton aria-label="share">

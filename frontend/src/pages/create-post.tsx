@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const createPost = () => {
-	useIsAuth()
+	useIsAuth();
 	const [createPost, { loading }] = useCreatePostMutation();
 	const router = useRouter();
 	const classes = useStyles();
@@ -55,51 +55,45 @@ const createPost = () => {
 	});
 	return (
 		<Layout layoutWidth="xs">
-				<div className={classes.paper}>
-					<Avatar className={classes.avatar}>
-						<CreateIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
-						Share your thoughts!
-					</Typography>
-					<form
-						className={classes.form}
-						onSubmit={formik.handleSubmit}
+			<div className={classes.paper}>
+				<Avatar className={classes.avatar}>
+					<CreateIcon />
+				</Avatar>
+				<Typography component="h1" variant="h5">
+					Share your thoughts!
+				</Typography>
+				<form className={classes.form} onSubmit={formik.handleSubmit}>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						rows={4}
+						fullWidth
+						multiline
+						id="text"
+						label="Content"
+						name="text"
+						autoComplete="text"
+						autoFocus
+						value={formik.values.text}
+						onChange={formik.handleChange}
+						error={
+							formik.touched.text && Boolean(formik.errors.text)
+						}
+						helperText={formik.touched.text && formik.errors.text}
+					/>
+					<LoadingButton
+						pending={loading}
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						className={classes.submit}
 					>
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							rows={4}
-							fullWidth
-							multiline
-							id="text"
-							label="Content"
-							name="text"
-							autoComplete="text"
-							autoFocus
-							value={formik.values.text}
-							onChange={formik.handleChange}
-							error={
-								formik.touched.text &&
-								Boolean(formik.errors.text)
-							}
-							helperText={
-								formik.touched.text && formik.errors.text
-							}
-						/>
-						<LoadingButton
-							pending={loading}
-							type="submit"
-							fullWidth
-							variant="contained"
-							color="primary"
-							className={classes.submit}
-						>
-							Post
-						</LoadingButton>
-					</form>
-				</div>
+						Post
+					</LoadingButton>
+				</form>
+			</div>
 		</Layout>
 	);
 };

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 const register = () => {
 	const [register, { loading }] = useRegisterMutation();
-	const router = useRouter()
+	const router = useRouter();
 	const classes = useStyles();
 	const formik = useFormik({
 		initialValues: {
@@ -56,131 +56,122 @@ const register = () => {
 						query: MeDocument,
 						data: {
 							__typename: "Query",
-							me: data?.register.user
-						}
-					})
+							me: data?.register.user,
+						},
+					});
 				},
 			});
-			if (res.data.register.errors) {
-				console.log(mapError(res.data.register.errors));
+			if (res?.data?.register.errors) {
 				setErrors(mapError(res.data.register.errors));
-			} else if (res.data.register.user) {
-				router.push("/")
+			} else if (res?.data?.register.user) {
+				router.push("/");
 			}
 		},
 	});
 	return (
-		<Layout layoutWidth = "xs">
-				<div className={classes.paper}>
-					<Avatar className={classes.avatar}>
-						<PersonAddIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
-						Register
-					</Typography>
-					<form
-						className={classes.form}
-						onSubmit={formik.handleSubmit}
+		<Layout layoutWidth="xs">
+			<div className={classes.paper}>
+				<Avatar className={classes.avatar}>
+					<PersonAddIcon />
+				</Avatar>
+				<Typography component="h1" variant="h5">
+					Register
+				</Typography>
+				<form className={classes.form} onSubmit={formik.handleSubmit}>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						id="username"
+						label="User Name"
+						name="username"
+						autoComplete="username"
+						autoFocus
+						value={formik.values.username}
+						onChange={formik.handleChange}
+						error={
+							formik.touched.username &&
+							Boolean(formik.errors.username)
+						}
+						helperText={
+							formik.touched.username && formik.errors.username
+						}
+					/>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						id="email"
+						label="Email Address"
+						name="email"
+						autoComplete="email"
+						value={formik.values.email}
+						onChange={formik.handleChange}
+						error={
+							formik.touched.email && Boolean(formik.errors.email)
+						}
+						helperText={formik.touched.email && formik.errors.email}
+					/>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						name="password"
+						label="Password"
+						type="password"
+						id="password"
+						autoComplete="current-password"
+						value={formik.values.password}
+						onChange={formik.handleChange}
+						error={
+							formik.touched.password &&
+							Boolean(formik.errors.password)
+						}
+						helperText={
+							formik.touched.password && formik.errors.password
+						}
+					/>
+					<LoadingButton
+						pending={loading}
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						className={classes.submit}
 					>
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="username"
-							label="User Name"
-							name="username"
-							autoComplete="username"
-							autoFocus
-							value={formik.values.username}
-							onChange={formik.handleChange}
-							error={
-								formik.touched.username &&
-								Boolean(formik.errors.username)
-							}
-							helperText={
-								formik.touched.username &&
-								formik.errors.username
-							}
-						/>
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="email"
-							label="Email Address"
-							name="email"
-							autoComplete="email"
-							value={formik.values.email}
-							onChange={formik.handleChange}
-							error={
-								formik.touched.email &&
-								Boolean(formik.errors.email)
-							}
-							helperText={
-								formik.touched.email && formik.errors.email
-							}
-						/>
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							name="password"
-							label="Password"
-							type="password"
-							id="password"
-							autoComplete="current-password"
-							value={formik.values.password}
-							onChange={formik.handleChange}
-							error={
-								formik.touched.password &&
-								Boolean(formik.errors.password)
-							}
-							helperText={
-								formik.touched.password &&
-								formik.errors.password
-							}
-						/>
-						<LoadingButton
-							pending={loading}
-							type="submit"
-							fullWidth
-							variant="contained"
-							color="primary"
-							className={classes.submit}
-						>
-							Register
-						</LoadingButton>
-						<Grid container>
-							<Grid item xs>
-								<Link href="/forgot-password">
-									<Typography
-										component="p"
-										variant="subtitle2"
-										className={classes.link}
-									>
-										Forgot password?
-									</Typography>
-								</Link>
-							</Grid>
-							<Grid item>
-								<Link href="/login">
-									<Typography
-										component="p"
-										variant="subtitle2"
-										className={classes.link}
-									>
-										Already have an account? Sign in
-									</Typography>
-								</Link>
-							</Grid>
+						Register
+					</LoadingButton>
+					<Grid container>
+						<Grid item xs>
+							<Link href="/forgot-password">
+								<Typography
+									component="p"
+									variant="subtitle2"
+									className={classes.link}
+								>
+									Forgot password?
+								</Typography>
+							</Link>
 						</Grid>
-					</form>
-				</div>
+						<Grid item>
+							<Link href="/login">
+								<Typography
+									component="p"
+									variant="subtitle2"
+									className={classes.link}
+								>
+									Already have an account? Sign in
+								</Typography>
+							</Link>
+						</Grid>
+					</Grid>
+				</form>
+			</div>
 		</Layout>
 	);
-}
+};
 
-export default withApollo({ssr: false})(register)
+export default withApollo({ ssr: false })(register);

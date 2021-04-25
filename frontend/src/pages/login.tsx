@@ -62,9 +62,9 @@ const login = () => {
 					});
 				},
 			});
-			if (res.data.login.errors) {
+			if (res?.data?.login.errors) {
 				setErrors(mapError(res.data.login.errors));
-			} else if (res.data.login.user) {
+			} else if (res?.data?.login.user) {
 				if (typeof router.query.next === "string") {
 					router.push(router.query.next);
 				} else {

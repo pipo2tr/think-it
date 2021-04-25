@@ -52,7 +52,7 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 	
 	const ModSection = (
 		<div className={classes.controls}>
-			{minUser.role === 0 ? (
+			{minUser!.role === 0 ? (
 				<IconButton aria-label="unban">
 					<HealingIcon style={{ color: "green" }} />
 				</IconButton>
@@ -61,7 +61,7 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 					<RemoveCircleIcon style={{ color: "red" }} />
 				</IconButton>
 			)}
-			{me.role === 3 ? (
+			{me?.role === 3 ? (
 				<IconButton aria-label="delete user">
 					<DeleteIcon style={{ color: "red" }} />
 				</IconButton>
@@ -82,7 +82,7 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 					<ShareIcon style={{ color: "blue" }} />
 				</IconButton>
 			</div>
-			{minUser.role !== 3 && me.role >= 2 ? ModSection : null}
+			{minUser!.role !== 3 && me!.role >= 2 ? ModSection : null}
 		</div>
 	);
 
@@ -103,8 +103,8 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 						component="h2"
 						className={classes.flex}
 					>
-						{minUser.username}
-						{minUser.role >= 2 ? (
+						{minUser!.username}
+						{minUser!.role >= 2 ? (
 							<StarsIcon style={{ color: "gold" }} />
 						) : null}
 					</Typography>
@@ -113,11 +113,11 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 						color="textSecondary"
 						component="p"
 					>
-						Creation Date : {minUser.createdAt.split("T")[0]}
+						Creation Date : {minUser!.createdAt.split("T")[0]}
 					</Typography>
 				</CardContent>
 			</CardActionArea>
-			{me.id === minUser.id ? null : ActionSection}
+			{me?.id === minUser!.id ? null : ActionSection}
 		</Card>
 	);
 };

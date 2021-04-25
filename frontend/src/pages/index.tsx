@@ -17,7 +17,7 @@ const Home = () => {
 		fetchMore({
 			variables: {
 				limit: 30,
-				skip: data.posts.posts.length,
+				skip: data?.posts.posts.length,
 			},
 		});
 	};

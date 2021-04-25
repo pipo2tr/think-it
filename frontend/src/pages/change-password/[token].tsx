@@ -53,8 +53,8 @@ export default function changePassword() {
 					token: router.query.token as string,
 				},
 			});
-			if (res.data.changePassword.errors) {
-				const err = mapError(res.data.changePassword.errors);
+			if (res?.data?.changePassword.errors) {
+				const err = mapError(res?.data?.changePassword?.errors);
 				if ("token" in err) {
 					setTokenError(err.token);
 				}

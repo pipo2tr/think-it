@@ -114,7 +114,7 @@ export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 				</ListSubheader>
 			}
 		>
-			{media ? (
+			{!media ? (
 				<ListItem button onClick={modalOpener}>
 					<ListItemIcon>
 						<CreateIcon />

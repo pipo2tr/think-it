@@ -31,7 +31,7 @@ const VotingSection: FC<VotingSectionProps> = ({ voteStatus, id, points }) => {
 	const classes = useStyles();
 	const [vote] = useVotingMutation();
 
-	const handleVoting = async (postId) => {
+	const handleVoting = async (postId: number) => {
 		const res = await vote({
 			variables: {
 				postId,

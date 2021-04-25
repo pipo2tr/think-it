@@ -19,6 +19,7 @@ import { useIsAuth } from "../../hooks/useisAuth";
 import { withApollo } from "../../utils/withApollo";
 import TabContainer from "../../components/Tabs/TabContainer";
 import ProfileCommentAccordian from "../../components/UserProfile/ProfileCommentAccordian";
+import { MinUserType } from "../../utils/MinUserTyoe";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -71,13 +72,16 @@ const userProfile = () => {
 		},
 	});
 
-	const { data: dataComment, fetchMore: fetchMoreComments } = useCommentsByUserQuery({
+	const {
+		data: dataComment,
+		fetchMore: fetchMoreComments,
+	} = useCommentsByUserQuery({
 		variables: {
 			userId: Id,
 			limit: 30,
-			skip:0
-		}
-	})
+			skip: 0,
+		},
+	});
 
 	const handlePanel = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setPanel(newValue);
@@ -85,7 +89,10 @@ const userProfile = () => {
 
 	const UserCard = (
 		<Box className={classes.hero}>
-			<ProfileCard minUser={data?.getUserById?.user} me={meData?.me} />
+			<ProfileCard
+				minUser={data?.getUserById?.user as MinUserType}
+				me={meData?.me as MinUserType}
+			/>
 		</Box>
 	);
 
@@ -94,33 +101,35 @@ const userProfile = () => {
 			variables: {
 				id: Id,
 				limit: 30,
-				skip: postData.postsByUser.posts.length,
+				skip: postData!.postsByUser!.posts.length,
 			},
 		});
 	};
-	
+
 	const getMoreComments = () => {
 		fetchMoreComments({
 			variables: {
 				userId: Id,
 				limit: 10,
-				skip: dataComment.commentsByUser.comments.length,
+				skip: dataComment!.commentsByUser!.comments.length,
 			},
 		});
-	}
+	};
 
 	const PostsAccordion = postData?.postsByUser?.posts.map((post) => (
 		<PostAccordion post={post} key={post.id} />
 	));
-	const CommentAccordian = (dataComment?.commentsByUser?.comments.map(comment => (
-		<ProfileCommentAccordian comment={comment} key={comment.id}/>
-	)))	
+	const CommentAccordian = dataComment?.commentsByUser?.comments.map(
+		(comment) => (
+			<ProfileCommentAccordian comment={comment} key={comment.id} />
+		)
+	);
 	const UserPost = (
 		<div className={classes.post}>
 			<InfiniteScroll
-				dataLength={postData?.postsByUser?.posts.length} //This is important field to render the next data
+				dataLength={postData?.postsByUser?.posts.length as number} //This is important field to render the next data
 				next={fetChMorePosts}
-				hasMore={postData?.postsByUser?.hasMore}
+				hasMore={postData?.postsByUser?.hasMore as boolean}
 				loader={<h4>Loading...</h4>}
 				endMessage={
 					<p style={{ textAlign: "center" }}>
@@ -134,21 +143,23 @@ const userProfile = () => {
 	);
 	const UserComments = (
 		<div className={classes.post}>
-		<InfiniteScroll
-			dataLength={dataComment?.commentsByUser?.comments?.length} //This is important field to render the next data
-			next={getMoreComments}
-			hasMore={dataComment?.commentsByUser?.hasMore}
-			loader={<h4>Loading...</h4>}
-			endMessage={
-				<p style={{ textAlign: "center" }}>
-					<b>User Has no more comments</b>
-				</p>
-			}
-		>
-			{CommentAccordian}
-		</InfiniteScroll>
-	</div>
-				)
+			<InfiniteScroll
+				dataLength={
+					dataComment?.commentsByUser?.comments?.length as number
+				} //This is important field to render the next data
+				next={getMoreComments}
+				hasMore={dataComment?.commentsByUser?.hasMore as boolean}
+				loader={<h4>Loading...</h4>}
+				endMessage={
+					<p style={{ textAlign: "center" }}>
+						<b>User Has no more comments</b>
+					</p>
+				}
+			>
+				{CommentAccordian}
+			</InfiniteScroll>
+		</div>
+	);
 	if (!meData && !dataComment && !postData) return <BackDrop />;
 	return (
 		<Layout layoutWidth="md">
@@ -158,7 +169,7 @@ const userProfile = () => {
 					{postData ? UserPost : <BackDrop />}
 				</TabContainer>
 				<TabContainer index={1} value={panel}>
-					 {dataComment ? UserComments : <BackDrop />}
+					{dataComment ? UserComments : <BackDrop />}
 				</TabContainer>
 			</TabPanel>
 		</Layout>

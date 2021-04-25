@@ -107,7 +107,6 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 						@{post.creator.username}
 					</div>
 				}
-				// subheader={post.points}
 				subheader={post.createdAt.split("T")[0]}
 			/>
 			<CardContent>

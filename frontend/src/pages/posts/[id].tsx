@@ -54,11 +54,11 @@ const post = () => {
 				{commentData?.commentsOnPost?.comments?.map((comment) => (
 					<CommentAccordion comment={comment} key={comment.id} />
 				))}
-			</InfiniteScroll> : null}
+			</InfiniteScroll> : <BackDrop />}
 		</PostLayout>
 	);
 };
 
-export default withApollo({ ssr: false })(post);
+export default withApollo({ ssr: true })(post);
 
 

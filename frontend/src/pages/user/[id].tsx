@@ -98,8 +98,6 @@ const userProfile = () => {
 			},
 		});
 	};
-	console.log(dataComment);
-	console.log(router.query.id);
 	
 	const getMoreComments = () => {
 		fetchMoreComments({
@@ -157,14 +155,14 @@ const userProfile = () => {
 			<div className={classes.root}>{data ? UserCard : <BackDrop />}</div>
 			<TabPanel panel={panel} handlePanel={handlePanel}>
 				<TabContainer index={0} value={panel}>
-					{postData ? UserPost : null}
+					{postData ? UserPost : <BackDrop />}
 				</TabContainer>
 				<TabContainer index={1} value={panel}>
-					 {dataComment ? UserComments : null}
+					 {dataComment ? UserComments : <BackDrop />}
 				</TabContainer>
 			</TabPanel>
 		</Layout>
 	);
 };
 
-export default withApollo({ ssr: false })(userProfile);
+export default withApollo({ ssr: true })(userProfile);

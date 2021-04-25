@@ -4,11 +4,11 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Link from "next/link";
 import React, { FC } from "react";
 import { MinPostType } from "../../utils/MinPostType";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
-		
 		accordion: {
 			width: "100%",
 		},
@@ -16,15 +16,16 @@ const useStyles = makeStyles((theme: Theme) =>
 			fontSize: theme.typography.pxToRem(15),
 			fontWeight: theme.typography.fontWeightRegular,
 		},
-		
+		text: {
+			cursor: "pointer"
+		}
 	})
 );
-interface PostAccordianInterface{
-    post: MinPostType
+interface PostAccordianInterface {
+	post: MinPostType;
 }
-const PostAccordion: FC<PostAccordianInterface> = ({post}) => {
+const PostAccordion: FC<PostAccordianInterface> = ({ post }) => {
 	const classes = useStyles();
-
 
 	return (
 		<Accordion className={classes.accordion} key={post.id}>
@@ -40,9 +41,11 @@ const PostAccordion: FC<PostAccordianInterface> = ({post}) => {
 					Likes: {post.points}
 				</Typography>
 			</AccordionSummary>
-			<AccordionDetails>
-				<Typography>{post.text}</Typography>
-			</AccordionDetails>
+			<Link href="/posts/[id]" as={`/posts/${post.id}`}>
+				<AccordionDetails className={classes.text}>
+					<Typography>{post.text}</Typography>
+				</AccordionDetails>
+			</Link>
 		</Accordion>
 	);
 };

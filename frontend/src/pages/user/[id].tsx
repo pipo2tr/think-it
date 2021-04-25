@@ -7,6 +7,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Layout from "../../components/Layout/Layout";
 import PostAccordion from "../../components/UserProfile/PostAccordian";
 import ProfileCard from "../../components/UserProfile/ProfileCard";
+import BackDrop from "../../components/Utils/BackDrop";
 import {
 	useGetUserByIdQuery,
 	usePostsByUserQuery,
@@ -93,7 +94,7 @@ const userProfile = () => {
 					UserCard
 				) : (
 					<Typography className={classes.heading}>
-						Cannot fetch user
+						<BackDrop />
 					</Typography>
 				)}
 			</div>
@@ -113,7 +114,7 @@ const userProfile = () => {
 						{PostsAccordion}
 					</InfiniteScroll>
 				) : (
-					<div>Loading...</div>
+					<BackDrop />
 				)}
 			</div>
 		</Layout>

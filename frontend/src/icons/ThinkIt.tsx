@@ -1,10 +1,15 @@
-import React from "react";
+import React, { FC } from "react";
 
-const ThinkIt = () => {
+interface ThinkItProps{
+	height?: number,
+	width?: number
+}
+
+const ThinkIt: FC<ThinkItProps> = ({height=16, width=16}) => {
 	return (
 		<svg
-			width="16"
-			height="16"
+			width={width + ""}
+			height={height + ""}
 			viewBox="0 0 30 27"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"

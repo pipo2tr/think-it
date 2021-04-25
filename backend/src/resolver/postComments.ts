@@ -37,6 +37,27 @@ export class PostCommentResolver {
 		};
 	}
 
+	@Query(() => PaginatedComments)
+	async commentsByUser(
+		@Arg("userId", () => Int!) userId: number,
+		@Arg("limit", () => Int) limit: number,
+		@Arg("skip", () => Int, { defaultValue: 0 }) skip: number
+	): Promise<PaginatedComments> {
+		const limitplus1 = limit + 1;
+
+		const comments = await getRepository(PostComment)
+			.createQueryBuilder("post_comment")
+			.where('"userId" = :userId', { userId })
+			.orderBy('post_comment."createdAt"', "DESC")
+			.skip(skip)
+			.take(limitplus1)
+			.getMany();
+		return {
+			comments: comments.slice(0, limit),
+			hasMore: comments.length === limitplus1,
+		};
+	}
+
 	@Mutation(() => PostComment)
 	@UseMiddleware(isAuthenticated)
 	async addComment(

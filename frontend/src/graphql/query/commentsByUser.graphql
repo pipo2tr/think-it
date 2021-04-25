@@ -1,0 +1,10 @@
+query CommentsByUser($userId: Int!, $limit: Int!, $skip: Int!) {
+  commentsByUser(userId: $userId, limit: $limit, skip: $skip) {
+    comments {
+      id
+      text
+      postId
+    }
+    hasMore
+  }
+}

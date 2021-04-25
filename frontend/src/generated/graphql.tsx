@@ -162,6 +162,7 @@ export type PostComment = {
 export type Query = {
   __typename?: 'Query';
   commentsOnPost: PaginatedComments;
+  commentsByUser: PaginatedComments;
   postsByUser?: Maybe<PaginatedPost>;
   post?: Maybe<Post>;
   posts: PaginatedPost;
@@ -174,6 +175,13 @@ export type QueryCommentsOnPostArgs = {
   skip?: Maybe<Scalars['Int']>;
   limit: Scalars['Int'];
   postId: Scalars['Int'];
+};
+
+
+export type QueryCommentsByUserArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  limit: Scalars['Int'];
+  userId: Scalars['Int'];
 };
 
 
@@ -288,6 +296,17 @@ export type CreatePostMutation = (
   ) }
 );
 
+export type DeleteCommentMutationVariables = Exact<{
+  postId: Scalars['Int'];
+  commentId: Scalars['Int'];
+}>;
+
+
+export type DeleteCommentMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteComment'>
+);
+
 export type DeleteMeMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -384,6 +403,25 @@ export type VotingMutationVariables = Exact<{
 export type VotingMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'voting'>
+);
+
+export type CommentsByUserQueryVariables = Exact<{
+  userId: Scalars['Int'];
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+}>;
+
+
+export type CommentsByUserQuery = (
+  { __typename?: 'Query' }
+  & { commentsByUser: (
+    { __typename?: 'PaginatedComments' }
+    & Pick<PaginatedComments, 'hasMore'>
+    & { comments: Array<(
+      { __typename?: 'PostComment' }
+      & Pick<PostComment, 'id' | 'text' | 'postId'>
+    )> }
+  ) }
 );
 
 export type CommentsOnPostQueryVariables = Exact<{
@@ -622,6 +660,38 @@ export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const DeleteCommentDocument = gql`
+    mutation DeleteComment($postId: Int!, $commentId: Int!) {
+  deleteComment(postId: $postId, commentId: $commentId)
+}
+    `;
+export type DeleteCommentMutationFn = Apollo.MutationFunction<DeleteCommentMutation, DeleteCommentMutationVariables>;
+
+/**
+ * __useDeleteCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentMutation, { data, loading, error }] = useDeleteCommentMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCommentMutation, DeleteCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument, options);
+      }
+export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
+export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
+export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
 export const DeleteMeDocument = gql`
     mutation DeleteMe {
   deleteMe
@@ -889,6 +959,48 @@ export function useVotingMutation(baseOptions?: Apollo.MutationHookOptions<Votin
 export type VotingMutationHookResult = ReturnType<typeof useVotingMutation>;
 export type VotingMutationResult = Apollo.MutationResult<VotingMutation>;
 export type VotingMutationOptions = Apollo.BaseMutationOptions<VotingMutation, VotingMutationVariables>;
+export const CommentsByUserDocument = gql`
+    query CommentsByUser($userId: Int!, $limit: Int!, $skip: Int!) {
+  commentsByUser(userId: $userId, limit: $limit, skip: $skip) {
+    comments {
+      id
+      text
+      postId
+    }
+    hasMore
+  }
+}
+    `;
+
+/**
+ * __useCommentsByUserQuery__
+ *
+ * To run a query within a React component, call `useCommentsByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentsByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentsByUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      limit: // value for 'limit'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useCommentsByUserQuery(baseOptions: Apollo.QueryHookOptions<CommentsByUserQuery, CommentsByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CommentsByUserQuery, CommentsByUserQueryVariables>(CommentsByUserDocument, options);
+      }
+export function useCommentsByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentsByUserQuery, CommentsByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CommentsByUserQuery, CommentsByUserQueryVariables>(CommentsByUserDocument, options);
+        }
+export type CommentsByUserQueryHookResult = ReturnType<typeof useCommentsByUserQuery>;
+export type CommentsByUserLazyQueryHookResult = ReturnType<typeof useCommentsByUserLazyQuery>;
+export type CommentsByUserQueryResult = Apollo.QueryResult<CommentsByUserQuery, CommentsByUserQueryVariables>;
 export const CommentsOnPostDocument = gql`
     query CommentsOnPost($postId: Int!, $limit: Int!, $skip: Int!) {
   commentsOnPost(postId: $postId, limit: $limit, skip: $skip) {

@@ -1,7 +1,7 @@
 import { withApollo as createWithApollo } from "next-apollo";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { NextPageContext } from "next";
-import {PaginatedPost} from "../generated/graphql"
+import {PaginatedComments, PaginatedPost} from "../generated/graphql"
 const createClient = (ctx: NextPageContext) =>
 	new ApolloClient({
 		uri: "http://localhost:4000/graphql",
@@ -40,6 +40,21 @@ const createClient = (ctx: NextPageContext) =>
 									posts: [
 										...(existing?.posts || []),
 										...incoming.posts,
+									],
+								};
+							},
+						},
+						commentsOnPost: {
+							keyArgs: [],
+							merge(
+								existing: PaginatedComments | undefined,
+								incoming: PaginatedComments
+							): PaginatedComments {
+								return {
+									...incoming,
+									comments: [
+										...(existing?.comments || []),
+										...incoming.comments,
 									],
 								};
 							},

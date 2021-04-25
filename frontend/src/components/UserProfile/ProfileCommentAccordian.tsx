@@ -32,7 +32,7 @@ const ProfileCommentAccordion: FC<ProfileCommentAccordianProps> = ({ comment }) 
 				id="panel1a-header"
 			>
 				<Link href="/posts/[id]" as={`/posts/${comment.postId}`}>
-					<Typography className={classes.heading}>
+					<Typography className={classes.heading} style={{color: "blueviolet"}}>
 						View Post
 					</Typography>
 				</Link>

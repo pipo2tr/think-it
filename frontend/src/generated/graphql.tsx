@@ -419,7 +419,7 @@ export type CommentsByUserQuery = (
     & Pick<PaginatedComments, 'hasMore'>
     & { comments: Array<(
       { __typename?: 'PostComment' }
-      & Pick<PostComment, 'id' | 'text' | 'postId'>
+      & Pick<PostComment, 'id' | 'text' | 'postId' | 'createdAt'>
     )> }
   ) }
 );
@@ -966,6 +966,7 @@ export const CommentsByUserDocument = gql`
       id
       text
       postId
+      createdAt
     }
     hasMore
   }

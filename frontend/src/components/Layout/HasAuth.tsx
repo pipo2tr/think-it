@@ -1,4 +1,10 @@
-import { Avatar, createStyles, makeStyles, Theme } from "@material-ui/core";
+import {
+	Avatar,
+	createStyles,
+	makeStyles,
+	Theme,
+	useMediaQuery,
+} from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
 import { red } from "@material-ui/core/colors";
 import List from "@material-ui/core/List";
@@ -13,12 +19,13 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import ExploreIcon from "@material-ui/icons/Explore";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useState } from "react";
 import {
 	useDeleteMeMutation,
 	useLogoutMutation,
-	useMeQuery
+	useMeQuery,
 } from "../../generated/graphql";
 import CreatePost from "../EditPost/CreatePost";
 import PostModal from "../EditPost/PostModal";
@@ -81,7 +88,7 @@ export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 		setOpenModal(false);
 		handleMobileMenuClose?.();
 	};
-
+	const media = useMediaQuery("(max-width:600px)");
 	const handleDeleteMe = async () => {
 		await deleteMe();
 		router.reload();
@@ -107,12 +114,23 @@ export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 				</ListSubheader>
 			}
 		>
-			<ListItem button onClick={modalOpener}>
-				<ListItemIcon>
-					<CreateIcon />
-				</ListItemIcon>
-				<ListItemText primary="Create Post" />
-			</ListItem>
+			{media ? (
+				<ListItem button onClick={modalOpener}>
+					<ListItemIcon>
+						<CreateIcon />
+					</ListItemIcon>
+					<ListItemText primary="Create Post" />
+				</ListItem>
+			) : (
+				<Link href="/create-post">
+					<ListItem button>
+						<ListItemIcon>
+							<CreateIcon />
+						</ListItemIcon>
+						<ListItemText primary="Create Post" />
+					</ListItem>
+				</Link>
+			)}
 			<ListItem button>
 				<ListItemIcon>
 					<ExploreIcon />

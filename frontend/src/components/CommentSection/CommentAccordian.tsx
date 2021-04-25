@@ -5,7 +5,8 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import React, { FC } from "react";
-import { MinCommentType } from "../../utils/minCommentType";
+import { CommentType } from "../../utils/CommentType";
+import { minCommentType } from "../../utils/minCommentType";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		accordion: {
@@ -19,11 +20,10 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 interface CommentAccordianProps{
-    comment: MinCommentType
+    comment: CommentType
 }
 const CommentAccordion: FC<CommentAccordianProps> = ({comment}) => {
 	const classes = useStyles();
-
 
 	return (
 		<Accordion className={classes.accordion} key={comment.id}>

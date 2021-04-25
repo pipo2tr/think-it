@@ -1,20 +1,19 @@
-import React, { FC } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import StarsIcon from "@material-ui/icons/Stars";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import { MinUserType } from "../../utils/MinUserTyoe";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import BlockIcon from "@material-ui/icons/Block";
-import ShareIcon from "@material-ui/icons/Share";
-import { useMeQuery } from "../../generated/graphql";
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
-import HealingIcon from '@material-ui/icons/Healing';
+import HealingIcon from "@material-ui/icons/Healing";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import ShareIcon from "@material-ui/icons/Share";
+import StarsIcon from "@material-ui/icons/Stars";
+import React, { FC } from "react";
+import { MinUserType } from "../../utils/MinUserTyoe";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -45,12 +44,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ProfileCardType {
 	minUser: MinUserType;
+	me?: MinUserType
 }
 
-const ProfileCard: FC<ProfileCardType> = ({ minUser }) => {
+const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 	const classes = useStyles();
-	const { data } = useMeQuery();
-
+	
 	const ModSection = (
 		<div className={classes.controls}>
 			{minUser.role === 0 ? (
@@ -62,11 +61,28 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser }) => {
 					<RemoveCircleIcon style={{ color: "red" }} />
 				</IconButton>
 			)}
-			{data?.me?.role === 3 ? (
+			{me.role === 3 ? (
 				<IconButton aria-label="delete user">
 					<DeleteIcon style={{ color: "red" }} />
 				</IconButton>
 			) : null}
+		</div>
+	);
+
+	const ActionSection = (
+		<div className={classes.actionSection}>
+			<div className={classes.controls}>
+				<IconButton aria-label="follow">
+					<PersonAddIcon className={classes.follow} />
+				</IconButton>
+				<IconButton aria-label="block">
+					<BlockIcon color="error" />
+				</IconButton>
+				<IconButton aria-label="share-profile">
+					<ShareIcon style={{ color: "blue" }} />
+				</IconButton>
+			</div>
+			{minUser.role !== 3 && me.role >= 2 ? ModSection : null}
 		</div>
 	);
 
@@ -88,7 +104,9 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser }) => {
 						className={classes.flex}
 					>
 						{minUser.username}
-						{minUser.role >= 2 ? <StarsIcon style={{ color: "gold" }} /> : null}
+						{minUser.role >= 2 ? (
+							<StarsIcon style={{ color: "gold" }} />
+						) : null}
 					</Typography>
 					<Typography
 						variant="body2"
@@ -99,20 +117,7 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser }) => {
 					</Typography>
 				</CardContent>
 			</CardActionArea>
-			<div className={classes.actionSection}>
-				<div className={classes.controls}>
-					<IconButton aria-label="follow">
-						<PersonAddIcon className={classes.follow} />
-					</IconButton>
-					<IconButton aria-label="block">
-						<BlockIcon color="error" />
-					</IconButton>
-					<IconButton aria-label="share-profile">
-						<ShareIcon style={{ color: "blue" }} />
-					</IconButton>
-				</div>
-				{minUser.role !== 3 && data?.me?.role >= 2 ? ModSection : null}
-			</div>
+			{me.id === minUser.id ? null : ActionSection}
 		</Card>
 	);
 };

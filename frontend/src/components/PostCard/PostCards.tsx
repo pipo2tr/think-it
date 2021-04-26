@@ -19,6 +19,7 @@ import PostMenu from "./PostMenu";
 import VotingSection from "./VotingSection";
 import CommentButton from "../CommentSection/CommentButton";
 import AddCommentModal from "../CommentSection/AddCommentModal";
+import CustomSnackbar from "../Utils/CustomSnackbar";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -63,7 +64,8 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const [openModal, setOpen] = useState(false);
-	const [openCommentModal, setOpenCommentModal] = useState(false)
+	const [openSnackBar, setOpenSnackbar] = useState(false);
+	const [openCommentModal, setOpenCommentModal] = useState(false);
 	const modalOpener = () => {
 		setOpen(true);
 	};
@@ -75,13 +77,23 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 	const handleClose = () => {
 		setAnchorEl(null);
 		setOpen(false);
+		
 	};
 	const handleCloseCommentModal = () => {
-		setOpenCommentModal(false)
+		setOpenCommentModal(false);
 	};
 	const handleOpenCommentModal = () => {
-		setOpenCommentModal(true)
-	}
+		setOpenCommentModal(true);
+	};
+	const handleOpenSnackbar = () => {
+		setOpenSnackbar(true);
+	};
+	const handleCloseSnackbar = () => {
+		setOpenSnackbar(false);
+	};
+	const copyToClipBoard = (id: number) => {
+		navigator.clipboard.writeText(`http://localhost:3000/posts/${id}`);
+	};
 	return (
 		<Card className={classes.root} key={post.id}>
 			<CardHeader
@@ -121,17 +133,26 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 					</Typography>
 				</Link>
 			</CardContent>
-			{meData?.me ? (
+			{meData?.me && meData?.me.role !== 0 ? (
 				<CardActions className={classes.action}>
 					<VotingSection
 						id={post.id}
 						voteStatus={post.voteStatus || null}
 						points={post.points}
 					/>
-					<IconButton aria-label="share">
+					<IconButton
+						aria-label="share"
+						onClick={() => {
+							handleOpenSnackbar();
+							copyToClipBoard(post.id);
+						}}
+					>
 						<ShareIcon />
 					</IconButton>
-					<CommentButton points={post.numComments} handleOpen={ handleOpenCommentModal}/>
+					<CommentButton
+						points={post.numComments}
+						handleOpen={handleOpenCommentModal}
+					/>
 				</CardActions>
 			) : null}
 			<PostMenu
@@ -144,9 +165,16 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 			<PostModal handleClose={handleClose} openModal={openModal}>
 				<EditPost post={post} handleClose={handleClose} />
 			</PostModal>
-			<PostModal handleClose={handleCloseCommentModal} openModal={openCommentModal}>
-				<AddCommentModal postId={post.id} handleClose={handleCloseCommentModal} />
+			<PostModal
+				handleClose={handleCloseCommentModal}
+				openModal={openCommentModal}
+			>
+				<AddCommentModal
+					postId={post.id}
+					handleClose={handleCloseCommentModal}
+				/>
 			</PostModal>
+			<CustomSnackbar openSnackBar={openSnackBar} text="Copied post link to clipboard" type="success" handleclose={handleCloseSnackbar }/>
 		</Card>
 	);
 };

@@ -19,17 +19,21 @@ interface CustomSnackbarProps {
 	text: string;
 	type: "success" | "error" | "info" | "warn";
 	openSnackBar: boolean;
+	handleclose?:()=> void
 }
 const CustomSnackbar: FC<CustomSnackbarProps> = ({
 	text,
 	type,
 	openSnackBar,
+	handleclose
+	
 }) => {
 	return (
 		<div style={{ width: "100%" }}>
 			<Snackbar
 				open={openSnackBar}
-				autoHideDuration={3000}
+				autoHideDuration={1000}
+				onClose={handleclose}
 			>
 				<div className={`alert ${type}`}>
 					{ICONMAPPER[type]}

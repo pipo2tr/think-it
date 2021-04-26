@@ -8,7 +8,7 @@ const createClient = (ctx: NextPageContext) =>
 		credentials: "include",
 		headers: {
 			cookie:
-				typeof window == "undefined" ? ctx?.req?.headers?.cookie : "",
+				(typeof window == "undefined" ? ctx?.req?.headers?.cookie : "" )as string,
 		},
 		cache: new InMemoryCache({
 			resultCaching: false,

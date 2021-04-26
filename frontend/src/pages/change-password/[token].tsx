@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import Layout from "../../components/Layout/Layout";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { mapError } from "../../utils/mapError";
+import { withApollo } from "../../utils/withApollo";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function changePassword() {
+const  changePassword = () => {
 	const router = useRouter();
 	const [changePwd, { loading }] = useChangePasswordMutation();
 	const [tokenError, setTokenError] = useState("");
@@ -134,3 +135,4 @@ export default function changePassword() {
 		</Layout>
 	);
 }
+export default withApollo({ ssr: false })(changePassword);

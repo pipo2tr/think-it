@@ -1,48 +1,22 @@
-import Avatar from "@material-ui/core/Avatar";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
-import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import FormButton from "../../components/Form/FormButton";
+import FormGrid from "../../components/Form/FormGrid";
+import FormHeader from "../../components/Form/FormHeader";
+import InputField from "../../components/Form/InputField";
 import Layout from "../../components/Layout/Layout";
 import { useChangePasswordMutation } from "../../generated/graphql";
+import { useFormStyles } from "../../hooks/useFormStyle";
 import { mapError } from "../../utils/mapError";
 import { withApollo } from "../../utils/withApollo";
 
-const useStyles = makeStyles((theme) => ({
-	paper: {
-		marginTop: theme.spacing(8),
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-	},
-	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
-	},
-	form: {
-		width: "100%", // Fix IE 11 issue.
-		marginTop: theme.spacing(1),
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2),
-	},
-	link: {
-		cursor: "pointer",
-		color: theme.palette.primary.dark,
-	},
-}));
-
-const  changePassword = () => {
+const changePassword = () => {
 	const router = useRouter();
 	const [changePwd, { loading }] = useChangePasswordMutation();
 	const [tokenError, setTokenError] = useState("");
-	const classes = useStyles();
+	const classes = useFormStyles();
 	const formik = useFormik({
 		initialValues: {
 			password: "",
@@ -68,24 +42,14 @@ const  changePassword = () => {
 	return (
 		<Layout layoutWidth="xs">
 			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
+				<FormHeader text="Change Password">
 					<VpnKeyIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					Change Password
-				</Typography>
+				</FormHeader>
 				<form className={classes.form} onSubmit={formik.handleSubmit}>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
+					<InputField
+						fieldType="password"
 						autoFocus
-						name="password"
 						label="New Password"
-						type="password"
-						id="password"
-						autoComplete="current-password"
 						value={formik.values.password}
 						onChange={formik.handleChange}
 						error={
@@ -97,42 +61,18 @@ const  changePassword = () => {
 						}
 					/>
 					{tokenError ? (
-						<Grid container>
-							<Grid item xs>
-								<Typography
-									component="p"
-									variant="subtitle2"
-									color="error"
-								>
-									{tokenError}
-								</Typography>
-							</Grid>
-							<Grid item>
-								<Link href="/forgot-password">
-									<Typography
-										component="p"
-										variant="subtitle2"
-										className={classes.link}
-									>
-										Get a new token
-									</Typography>
-								</Link>
-							</Grid>
-						</Grid>
+						<FormGrid
+							text1={tokenError}
+							error={true}
+							link1="/forgot-password"
+							link2="/forgot-password"
+							text2="Get a new token"
+						/>
 					) : null}
-					<LoadingButton
-						pending={false}
-						type="submit"
-						fullWidth
-						variant="contained"
-						color="primary"
-						className={classes.submit}
-					>
-						Change
-					</LoadingButton>
+					<FormButton loading={loading} text="Change Password" />
 				</form>
 			</div>
 		</Layout>
 	);
-}
+};
 export default withApollo({ ssr: false })(changePassword);

@@ -1,46 +1,20 @@
-import Avatar from "@material-ui/core/Avatar";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import MoodIcon from "@material-ui/icons/Mood";
 import MoodBadIcon from "@material-ui/icons/MoodBad";
-import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
-import Link from "next/link";
 import React, { useState } from "react";
+import FormButton from "../components/Form/FormButton";
+import FormGrid from "../components/Form/FormGrid";
+import FormHeader from "../components/Form/FormHeader";
+import InputField from "../components/Form/InputField";
 import Layout from "../components/Layout/Layout";
 import { useForgotPasswordMutation } from "../generated/graphql";
+import { useFormStyles } from "../hooks/useFormStyle";
 import { withApollo } from "../utils/withApollo";
-
-const useStyles = makeStyles((theme) => ({
-	paper: {
-		marginTop: theme.spacing(8),
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-	},
-	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
-	},
-	form: {
-		width: "100%", // Fix IE 11 issue.
-		marginTop: theme.spacing(1),
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2),
-	},
-	link: {
-		cursor: "pointer",
-		color: theme.palette.primary.dark,
-	},
-}));
 
 const forgotPassword = () => {
 	const [forgotPwd, { loading }] = useForgotPasswordMutation();
 	const [sentMail, setSentMail] = useState(false);
-	const classes = useStyles();
+	const classes = useFormStyles();
 	const formik = useFormik({
 		initialValues: {
 			email: "",
@@ -56,35 +30,25 @@ const forgotPassword = () => {
 		<Layout layoutWidth={sentMail ? "lg" : "xs"}>
 			{sentMail ? (
 				<div className={classes.paper}>
-					<Avatar className={classes.avatar}>
+					<FormHeader
+						text={`Succefullty sent mail to ${formik.values.email}, please
+				check your inbox`}
+					>
 						<MoodIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
-						Succefullty sent mail to {formik.values.email}, please
-						check your inbox
-					</Typography>
+					</FormHeader>
 				</div>
 			) : (
 				<div className={classes.paper}>
-					<Avatar className={classes.avatar}>
+					<FormHeader text="Forgot Password">
 						<MoodBadIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
-						Forgot Password
-					</Typography>
+					</FormHeader>
 					<form
 						className={classes.form}
 						onSubmit={formik.handleSubmit}
 					>
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="email"
+						<InputField
+							fieldType="email"
 							label="Email Address"
-							name="email"
-							autoComplete="email"
 							autoFocus
 							value={formik.values.email}
 							onChange={formik.handleChange}
@@ -96,40 +60,13 @@ const forgotPassword = () => {
 								formik.touched.email && formik.errors.email
 							}
 						/>
-						<LoadingButton
-							pending={loading}
-							type="submit"
-							fullWidth
-							variant="contained"
-							color="primary"
-							className={classes.submit}
-						>
-							Submit
-						</LoadingButton>
-						<Grid container>
-							<Grid item xs>
-								<Link href="/register">
-									<Typography
-										component="p"
-										variant="subtitle2"
-										className={classes.link}
-									>
-										Don't have an account?
-									</Typography>
-								</Link>
-							</Grid>
-							<Grid item>
-								<Link href="/login">
-									<Typography
-										component="p"
-										variant="subtitle2"
-										className={classes.link}
-									>
-										I remember my password!
-									</Typography>
-								</Link>
-							</Grid>
-						</Grid>
+						<FormButton loading={loading} text="Submit" />
+						<FormGrid
+							link1="/register"
+							text1="Don't have an account?"
+							link2="/login"
+							text2="I remember my password!"
+						/>
 					</form>
 				</div>
 			)}

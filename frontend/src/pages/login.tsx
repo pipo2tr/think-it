@@ -1,46 +1,22 @@
-import Avatar from "@material-ui/core/Avatar";
-import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import FormButton from "../components/Form/FormButton";
+import FormGrid from "../components/Form/FormGrid";
+import FormHeader from "../components/Form/FormHeader";
+import InputField from "../components/Form/InputField";
 import Layout from "../components/Layout/Layout";
 import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
+import { useFormStyles } from "../hooks/useFormStyle";
 import { mapError } from "../utils/mapError";
 import { withApollo } from "../utils/withApollo";
-const useStyles = makeStyles((theme) => ({
-	paper: {
-		marginTop: theme.spacing(8),
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-	},
-	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
-	},
-	form: {
-		width: "100%", // Fix IE 11 issue.
-		marginTop: theme.spacing(1),
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2),
-	},
-	link: {
-		cursor: "pointer",
-		color: theme.palette.primary.dark,
-	},
-}));
 
 const login = () => {
 	const [login, { loading }] = useLoginMutation();
 	const router = useRouter();
-	const classes = useStyles();
+	const classes = useFormStyles();
 	const formik = useFormik({
 		initialValues: {
 			usernameOremail: "",
@@ -77,22 +53,13 @@ const login = () => {
 	return (
 		<Layout layoutWidth="xs">
 			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
+				<FormHeader text="Sign In">
 					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					Sign in
-				</Typography>
+				</FormHeader>
 				<form className={classes.form} onSubmit={formik.handleSubmit}>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						id="usernameOremail"
+					<InputField
 						label="Username Or Email"
-						name="usernameOremail"
-						autoComplete="usernameOremail"
+						fieldType="usernameOremail"
 						autoFocus
 						value={formik.values.usernameOremail}
 						onChange={formik.handleChange}
@@ -105,15 +72,9 @@ const login = () => {
 							formik.errors.usernameOremail
 						}
 					/>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						name="password"
+					<InputField
+						fieldType="password"
 						label="Password"
-						type="password"
-						id="password"
 						autoComplete="current-password"
 						value={formik.values.password}
 						onChange={formik.handleChange}
@@ -125,40 +86,13 @@ const login = () => {
 							formik.touched.password && formik.errors.password
 						}
 					/>
-					<LoadingButton
-						pending={loading}
-						type="submit"
-						fullWidth
-						variant="contained"
-						color="primary"
-						className={classes.submit}
-					>
-						Login
-					</LoadingButton>
-					<Grid container>
-						<Grid item xs>
-							<Link href="/forgot-password">
-								<Typography
-									component="p"
-									variant="subtitle2"
-									className={classes.link}
-								>
-									Forgot password?
-								</Typography>
-							</Link>
-						</Grid>
-						<Grid item>
-							<Link href="/register">
-								<Typography
-									component="p"
-									variant="subtitle2"
-									className={classes.link}
-								>
-									Don't have an account? Sign Up
-								</Typography>
-							</Link>
-						</Grid>
-					</Grid>
+					<FormButton text="Log in" loading={loading}/>
+					<FormGrid
+						link1="/forgot-password"
+						text1="Forgot Password"
+						link2="/register"
+						text2="Dont't have an account? Register"
+					/>
 				</form>
 			</div>
 		</Layout>

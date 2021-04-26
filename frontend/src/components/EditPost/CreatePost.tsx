@@ -1,37 +1,19 @@
-import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import CreateIcon from "@material-ui/icons/Create";
-import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import React, { FC } from "react";
 import { useCreatePostMutation } from "../../generated/graphql";
-const useStyles = makeStyles((theme) => ({
-	paper: {
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-		width: "90%",
-	},
-	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
-	},
-	form: {
-		width: "100%", // Fix IE 11 issue.
-		marginTop: theme.spacing(1),
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2),
-	},
-}));
+import { useModalFormStyle } from "../../hooks/useModalFormStyle";
+import FormButton from "../Form/FormButton";
+import FormHeader from "../Form/FormHeader";
+import InputField from "../Form/InputField";
+
 interface CreatePostProps {
 	handleClose: () => void;
 }
 const CreatePost: FC<CreatePostProps> = ({ handleClose }) => {
 	const [createPost, { loading }] = useCreatePostMutation();
-	const classes = useStyles();
+	const classes = useModalFormStyle();
 	const formik = useFormik({
 		initialValues: {
 			text: "",
@@ -50,40 +32,22 @@ const CreatePost: FC<CreatePostProps> = ({ handleClose }) => {
 	});
 	return (
 		<div className={classes.paper}>
-			<Avatar className={classes.avatar}>
+			<FormHeader text="Share your thoughts!">
 				<CreateIcon />
-			</Avatar>
-			<Typography component="h1" variant="h5">
-				Share your thoughts!
-			</Typography>
+			</FormHeader>
 			<form className={classes.form} onSubmit={formik.handleSubmit}>
-				<TextField
-					variant="outlined"
-					margin="normal"
-					required
-					rows={4}
-					fullWidth
-					multiline
-					id="text"
+				<InputField
+					fieldType="text"
 					label="Content"
-					name="text"
-					autoComplete="text"
+					multiline
+					rows={4}
 					autoFocus
 					value={formik.values.text}
 					onChange={formik.handleChange}
 					error={formik.touched.text && Boolean(formik.errors.text)}
 					helperText={formik.touched.text && formik.errors.text}
 				/>
-				<LoadingButton
-					pending={loading}
-					type="submit"
-					fullWidth
-					variant="contained"
-					color="primary"
-					className={classes.submit}
-				>
-					Post
-				</LoadingButton>
+				<FormButton loading={loading} text="Post" />
 			</form>
 		</div>
 	);

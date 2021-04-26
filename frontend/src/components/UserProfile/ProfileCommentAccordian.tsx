@@ -16,32 +16,45 @@ const useStyles = makeStyles((theme: Theme) =>
 			fontSize: theme.typography.pxToRem(15),
 			fontWeight: theme.typography.fontWeightRegular,
 		},
+		flex: {
+			display: "flex",
+			justifyContent: "space-between",
+			alignItems: "center",
+		},
 	})
 );
 interface ProfileCommentAccordianProps {
 	comment: minCommentType;
 }
-const ProfileCommentAccordion: FC<ProfileCommentAccordianProps> = ({ comment }) => {
+const ProfileCommentAccordion: FC<ProfileCommentAccordianProps> = ({
+	comment,
+}) => {
 	const classes = useStyles();
 
 	return (
-		<Accordion className={classes.accordion} key={comment.id} defaultExpanded>
+		<Accordion
+			className={classes.accordion}
+			key={comment.id}
+		>
 			<AccordionSummary
 				expandIcon={<ExpandMoreIcon />}
 				aria-controls="panel1a-content"
 				id="panel1a-header"
 			>
+				<Typography>{comment.text}</Typography>
+			</AccordionSummary>
+			<AccordionDetails className={classes.flex}>
 				<Link href="/posts/[id]" as={`/posts/${comment.postId}`}>
-					<Typography className={classes.heading} style={{color: "blueviolet"}}>
+					<Typography
+						className={classes.heading}
+						style={{ color: "blueviolet" }}
+					>
 						View Post
 					</Typography>
 				</Link>
 				<Typography className={classes.heading}>
 					Posted On : {comment.createdAt.split("T")[0]}
 				</Typography>
-			</AccordionSummary>
-			<AccordionDetails>
-				<Typography>{comment.text}</Typography>
 			</AccordionDetails>
 		</Accordion>
 	);

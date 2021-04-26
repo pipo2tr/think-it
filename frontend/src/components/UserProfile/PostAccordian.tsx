@@ -17,8 +17,10 @@ const useStyles = makeStyles((theme: Theme) =>
 			fontSize: theme.typography.pxToRem(15),
 			fontWeight: theme.typography.fontWeightRegular,
 		},
-		text: {
-			cursor: "pointer",
+		flex: {
+			display:"flex",
+			justifyContent: "space-between",
+			alignItems:"center"
 		},
 	})
 );
@@ -29,29 +31,29 @@ const PostAccordion: FC<PostAccordianInterface> = ({ post }) => {
 	const classes = useStyles();
 
 	return (
-		<Accordion className={classes.accordion} key={post.id} defaultExpanded>
+		<Accordion className={classes.accordion} key={post.id}>
 			<AccordionSummary
 				expandIcon={<ExpandMoreIcon />}
 				aria-controls="panel1a-content"
 				id="panel1a-header"
 			>
-				<Hidden xsDown>
-					<Typography className={classes.heading}>
-						Posted On : {post.createdAt.split("T")[0]}
-					</Typography>
-				</Hidden>
-				<Typography className={classes.heading}>
-					Comments: {post.numComments}
-				</Typography>
-				<Typography className={classes.heading}>
-					Likes: {post.points}
-				</Typography>
-			</AccordionSummary>
 			<Link href="/posts/[id]" as={`/posts/${post.id}`}>
-				<AccordionDetails className={classes.text}>
-					<Typography>{post.text}</Typography>
-				</AccordionDetails>
+				<Typography className={classes.heading}>{post.text}</Typography>
 			</Link>
+			</AccordionSummary>
+				<AccordionDetails className={classes.flex}>
+					<Hidden xsDown>
+						<Typography className={classes.heading}>
+							Posted On : {post.createdAt.split("T")[0]}
+						</Typography>
+					</Hidden>
+					<Typography className={classes.heading}>
+						Comments: {post.numComments}
+					</Typography>
+					<Typography className={classes.heading}>
+						Likes: {post.points}
+					</Typography>
+				</AccordionDetails>
 		</Accordion>
 	);
 };

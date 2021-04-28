@@ -23,16 +23,13 @@ const main = async () => {
 	env.config();
 	const dbConnect = await createConnection({
 		type: "postgres",
-		// database: "thinkit",
-		// username: "postgres",
-		// password: "siddharth",
 		url: process.env.DATABASE_URL,
 		synchronize: true,
 		logging: !PROD,
 		entities: [Post, User, Vote, PostComment],
 		migrations: [path.join(__dirname, "./migrations/*")],
 	});
-	// await dbConnect.runMigrations();
+	await dbConnect.runMigrations();
 	const app = express();
 
 	app.set("trust proxy", 1);

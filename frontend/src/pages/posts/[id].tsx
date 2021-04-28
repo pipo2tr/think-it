@@ -5,11 +5,16 @@ import CommentAccordion from "../../components/CommentSection/CommentAccordian";
 import PostLayout from "../../components/Layout/PostLayout";
 import PostCards from "../../components/PostCard/PostCards";
 import BackDrop from "../../components/Utils/BackDrop";
-import { useCommentsOnPostQuery, usePostQuery } from "../../generated/graphql";
+import {
+	useCommentsOnPostQuery,
+	useMeQuery,
+	usePostQuery,
+} from "../../generated/graphql";
 import { withApollo } from "../../utils/withApollo";
 
 const post = () => {
 	const router = useRouter();
+	const { data: meData } = useMeQuery();
 	const Id = parseInt(router.query.id as string);
 	const { data } = usePostQuery({
 		skip: !Id,
@@ -39,7 +44,7 @@ const post = () => {
 	if (!data?.post) return <BackDrop />;
 	return (
 		<PostLayout>
-			<PostCards post={data.post} />
+			<PostCards post={data.post} meData={meData?.me!} />
 			{commentData ? (
 				<InfiniteScroll
 					dataLength={commentData?.commentsOnPost?.comments?.length} //This is important field to render the next data

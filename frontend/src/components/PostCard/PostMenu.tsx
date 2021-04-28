@@ -1,15 +1,17 @@
 import { Menu, MenuItem } from "@material-ui/core";
+import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import React, { FC, useState } from "react";
-import { useDeletePostMutation } from "../../generated/graphql";
-import { PostsType } from "../../utils/PostsType";
-import CreateIcon from "@material-ui/icons/Create";
+import {
+	PostFragFragment,
+	useDeletePostMutation,
+} from "../../generated/graphql";
 import CustomSnackbar from "../Utils/CustomSnackbar";
 interface PostMenuInterface {
 	anchorEl: HTMLElement | null;
 	handleClose: () => void;
 	open: boolean;
-	post: PostsType;
+	post: PostFragFragment;
 	modalOpener: () => void;
 }
 

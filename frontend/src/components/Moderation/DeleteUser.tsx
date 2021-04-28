@@ -19,6 +19,7 @@ const DeleteUser: FC<DeleteUserProps> = ({ id }) => {
 				id,
 			},
 			update: (cache) => {
+				cache.evict({ fieldName: "getUserById" });
 				cache.evict({ fieldName: "posts" });
 			},
 		});

@@ -7,7 +7,6 @@ import IconButton from "@material-ui/core/IconButton";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import BlockIcon from "@material-ui/icons/Block";
-import DeleteIcon from "@material-ui/icons/Delete";
 import HealingIcon from "@material-ui/icons/Healing";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
@@ -15,7 +14,9 @@ import ShareIcon from "@material-ui/icons/Share";
 import StarsIcon from "@material-ui/icons/Stars";
 import React, { FC } from "react";
 import { MinUserFragment } from "../../generated/graphql";
+import BanUser from "../Moderation/BanUser";
 import DeleteUser from "../Moderation/DeleteUser";
+import UnbanUser from "../Moderation/UnBan";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -55,21 +56,11 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 	const ModSection = (
 		<div className={classes.controls}>
 			{minUser?.role === 0 ? (
-				<Tooltip title="Unban" aria-label="unban">
-					<IconButton aria-label="unban">
-						<HealingIcon style={{ color: "green" }} />
-					</IconButton>
-				</Tooltip>
+				<UnbanUser id={minUser?.id!} />
 			) : (
-				<Tooltip title="Ban" aria-label="ban">
-					<IconButton aria-label="ban">
-						<RemoveCircleIcon style={{ color: "red" }} />
-					</IconButton>
-				</Tooltip>
+				<BanUser id={minUser?.id!} />
 			)}
-			{me?.role === 3 ? (
-				<DeleteUser id={minUser?.id!}/>
-			) : null}
+			{me?.role === 3 ? <DeleteUser id={minUser?.id!} /> : null}
 		</div>
 	);
 

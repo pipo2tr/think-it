@@ -38,9 +38,7 @@ export type Mutation = {
   changePassword: UserResponse;
   ban: UserResponse;
   unban: UserResponse;
-  makeAdmin: UserResponse;
-  makeOwner: UserResponse;
-  admin_deleteUser: Scalars['Boolean'];
+  adminDeleteUser: Scalars['Boolean'];
   deleteMe: Scalars['Boolean'];
 };
 
@@ -100,27 +98,17 @@ export type MutationChangePasswordArgs = {
 
 
 export type MutationBanArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 
 export type MutationUnbanArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 
-export type MutationMakeAdminArgs = {
-  id: Scalars['Float'];
-};
-
-
-export type MutationMakeOwnerArgs = {
-  id: Scalars['Float'];
-};
-
-
-export type MutationAdmin_DeleteUserArgs = {
-  id: Scalars['Float'];
+export type MutationAdminDeleteUserArgs = {
+  id: Scalars['Int'];
 };
 
 export type PaginatedComments = {
@@ -263,6 +251,35 @@ export type AddCommentMutation = (
   ) }
 );
 
+export type AdminDeleteUserMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type AdminDeleteUserMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'adminDeleteUser'>
+);
+
+export type BanMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type BanMutation = (
+  { __typename?: 'Mutation' }
+  & { ban: (
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
+
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
   newPassword: Scalars['String'];
@@ -374,6 +391,25 @@ export type RegisterMutation = (
     & { user?: Maybe<(
       { __typename?: 'User' }
       & MinUserFragment
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
+
+export type UnbanMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type UnbanMutation = (
+  { __typename?: 'Mutation' }
+  & { unban: (
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
     )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
@@ -586,6 +622,77 @@ export function useAddCommentMutation(baseOptions?: Apollo.MutationHookOptions<A
 export type AddCommentMutationHookResult = ReturnType<typeof useAddCommentMutation>;
 export type AddCommentMutationResult = Apollo.MutationResult<AddCommentMutation>;
 export type AddCommentMutationOptions = Apollo.BaseMutationOptions<AddCommentMutation, AddCommentMutationVariables>;
+export const AdminDeleteUserDocument = gql`
+    mutation AdminDeleteUser($id: Int!) {
+  adminDeleteUser(id: $id)
+}
+    `;
+export type AdminDeleteUserMutationFn = Apollo.MutationFunction<AdminDeleteUserMutation, AdminDeleteUserMutationVariables>;
+
+/**
+ * __useAdminDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useAdminDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAdminDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [adminDeleteUserMutation, { data, loading, error }] = useAdminDeleteUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAdminDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<AdminDeleteUserMutation, AdminDeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AdminDeleteUserMutation, AdminDeleteUserMutationVariables>(AdminDeleteUserDocument, options);
+      }
+export type AdminDeleteUserMutationHookResult = ReturnType<typeof useAdminDeleteUserMutation>;
+export type AdminDeleteUserMutationResult = Apollo.MutationResult<AdminDeleteUserMutation>;
+export type AdminDeleteUserMutationOptions = Apollo.BaseMutationOptions<AdminDeleteUserMutation, AdminDeleteUserMutationVariables>;
+export const BanDocument = gql`
+    mutation Ban($id: Int!) {
+  ban(id: $id) {
+    user {
+      id
+      username
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+export type BanMutationFn = Apollo.MutationFunction<BanMutation, BanMutationVariables>;
+
+/**
+ * __useBanMutation__
+ *
+ * To run a mutation, you first call `useBanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [banMutation, { data, loading, error }] = useBanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useBanMutation(baseOptions?: Apollo.MutationHookOptions<BanMutation, BanMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BanMutation, BanMutationVariables>(BanDocument, options);
+      }
+export type BanMutationHookResult = ReturnType<typeof useBanMutation>;
+export type BanMutationResult = Apollo.MutationResult<BanMutation>;
+export type BanMutationOptions = Apollo.BaseMutationOptions<BanMutation, BanMutationVariables>;
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($token: String!, $newPassword: String!) {
   changePassword(token: $token, newPassword: $newPassword) {
@@ -892,6 +999,45 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const UnbanDocument = gql`
+    mutation Unban($id: Int!) {
+  unban(id: $id) {
+    user {
+      id
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+export type UnbanMutationFn = Apollo.MutationFunction<UnbanMutation, UnbanMutationVariables>;
+
+/**
+ * __useUnbanMutation__
+ *
+ * To run a mutation, you first call `useUnbanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnbanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unbanMutation, { data, loading, error }] = useUnbanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUnbanMutation(baseOptions?: Apollo.MutationHookOptions<UnbanMutation, UnbanMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnbanMutation, UnbanMutationVariables>(UnbanDocument, options);
+      }
+export type UnbanMutationHookResult = ReturnType<typeof useUnbanMutation>;
+export type UnbanMutationResult = Apollo.MutationResult<UnbanMutation>;
+export type UnbanMutationOptions = Apollo.BaseMutationOptions<UnbanMutation, UnbanMutationVariables>;
 export const UpdatePostDocument = gql`
     mutation UpdatePost($id: Int!, $text: String!) {
   updatePost(id: $id, text: $text) {

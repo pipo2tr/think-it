@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -14,7 +14,7 @@ import {
 	useCommentsByUserQuery,
 	useGetUserByIdQuery,
 	useMeQuery,
-	usePostsByUserQuery
+	usePostsByUserQuery,
 } from "../../generated/graphql";
 import { useIsAuth } from "../../hooks/useisAuth";
 import { withApollo } from "../../utils/withApollo";
@@ -87,10 +87,7 @@ const userProfile = () => {
 
 	const UserCard = (
 		<Box className={classes.hero}>
-			<ProfileCard
-				minUser={data?.getUserById?.user! }
-				me={meData?.me!}
-			/>
+			<ProfileCard minUser={data?.getUserById?.user!} me={meData?.me!} />
 		</Box>
 	);
 
@@ -158,7 +155,15 @@ const userProfile = () => {
 			</InfiniteScroll>
 		</div>
 	);
-	if (!meData && !dataComment && !postData) return <BackDrop />;
+
+	if (data?.getUserById?.errors) {
+		return (
+			<Layout layoutWidth="md">
+				<div className={classes.root}>User No longer exists</div>
+			</Layout>
+		);
+	}
+
 	return (
 		<Layout layoutWidth="md">
 			<div className={classes.root}>{data ? UserCard : <BackDrop />}</div>

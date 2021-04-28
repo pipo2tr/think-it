@@ -10,6 +10,7 @@ import PostAccordion from "../../components/UserProfile/PostAccordian";
 import ProfileCard from "../../components/UserProfile/ProfileCard";
 import ProfileCommentAccordian from "../../components/UserProfile/ProfileCommentAccordian";
 import BackDrop from "../../components/Utils/BackDrop";
+import PaginatorMessage from "../../components/Utils/Paginator";
 import {
 	useCommentsByUserQuery,
 	useGetUserByIdQuery,
@@ -126,11 +127,7 @@ const userProfile = () => {
 				next={fetChMorePosts}
 				hasMore={postData?.postsByUser?.hasMore as boolean}
 				loader={<h4>Loading...</h4>}
-				endMessage={
-					<p style={{ textAlign: "center" }}>
-						<b>User Has no more posts</b>
-					</p>
-				}
+				endMessage={<PaginatorMessage text="User has no more posts" />}
 			>
 				{PostsAccordion}
 			</InfiniteScroll>
@@ -146,9 +143,7 @@ const userProfile = () => {
 				hasMore={dataComment?.commentsByUser?.hasMore as boolean}
 				loader={<h4>Loading...</h4>}
 				endMessage={
-					<p style={{ textAlign: "center" }}>
-						<b>User Has no more comments</b>
-					</p>
+					<PaginatorMessage text="User has no more comments" />
 				}
 			>
 				{CommentAccordian}

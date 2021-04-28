@@ -5,6 +5,7 @@ import CommentAccordion from "../../components/CommentSection/CommentAccordian";
 import PostLayout from "../../components/Layout/PostLayout";
 import PostCards from "../../components/PostCard/PostCards";
 import BackDrop from "../../components/Utils/BackDrop";
+import PaginatorMessage from "../../components/Utils/Paginator";
 import {
 	useCommentsOnPostQuery,
 	useMeQuery,
@@ -52,9 +53,9 @@ const post = () => {
 					hasMore={commentData?.commentsOnPost?.hasMore}
 					loader={<h4>Loading...</h4>}
 					endMessage={
-						<p style={{ textAlign: "center" }}>
-							<b>End of comments</b>
-						</p>
+						<PaginatorMessage
+						text="This post has no more comments"
+						/>
 					}
 				>
 					{commentData?.commentsOnPost?.comments?.map((comment) => (

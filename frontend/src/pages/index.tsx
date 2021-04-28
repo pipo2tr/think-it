@@ -3,7 +3,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import PostLayout from "../components/Layout/PostLayout";
 import PostCards from "../components/PostCard/PostCards";
 import BackDrop from "../components/Utils/BackDrop";
-import { MinUserFragment, useMeQuery, usePostsQuery } from "../generated/graphql";
+import PaginatorMessage from "../components/Utils/Paginator";
+import {
+	MinUserFragment,
+	useMeQuery,
+	usePostsQuery,
+} from "../generated/graphql";
 import { withApollo } from "../utils/withApollo";
 
 const Home = () => {
@@ -37,15 +42,17 @@ const Home = () => {
 					dataLength={data?.posts?.posts?.length} //This is important field to render the next data
 					next={moreData}
 					hasMore={data?.posts?.hasMore}
-					loader={<h4>Loading...</h4>}
+					loader={<h5>Loading...</h5>}
 					endMessage={
-						<p style={{ textAlign: "center" }}>
-							<b>Yay! You have seen it all</b>
-						</p>
+						<PaginatorMessage text="No more posts available." />
 					}
 				>
 					{data?.posts?.posts?.map((post) => (
-						<PostCards post={post} meData={meData as MinUserFragment} key={post.id} />
+						<PostCards
+							post={post}
+							meData={meData as MinUserFragment}
+							key={post.id}
+						/>
 					))}
 				</InfiniteScroll>
 			) : null}

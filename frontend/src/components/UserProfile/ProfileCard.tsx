@@ -1,3 +1,4 @@
+import { Tooltip } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
@@ -44,27 +45,33 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ProfileCardType {
 	minUser: MinUserFragment;
-	me?: MinUserFragment
+	me?: MinUserFragment;
 }
 
 const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 	const classes = useStyles();
-	
+
 	const ModSection = (
 		<div className={classes.controls}>
 			{minUser!.role === 0 ? (
-				<IconButton aria-label="unban">
-					<HealingIcon style={{ color: "green" }} />
-				</IconButton>
+				<Tooltip title="Unban" aria-label="unban">
+					<IconButton aria-label="unban">
+						<HealingIcon style={{ color: "green" }} />
+					</IconButton>
+				</Tooltip>
 			) : (
-				<IconButton aria-label="ban">
-					<RemoveCircleIcon style={{ color: "red" }} />
-				</IconButton>
+				<Tooltip title="Ban" aria-label="ban">
+					<IconButton aria-label="ban">
+						<RemoveCircleIcon style={{ color: "red" }} />
+					</IconButton>
+				</Tooltip>
 			)}
 			{me?.role === 3 ? (
-				<IconButton aria-label="delete user">
-					<DeleteIcon style={{ color: "red" }} />
-				</IconButton>
+				<Tooltip title="Delete User" aria-label="delete-user">
+					<IconButton aria-label="delete user">
+						<DeleteIcon style={{ color: "red" }} />
+					</IconButton>
+				</Tooltip>
 			) : null}
 		</div>
 	);
@@ -72,15 +79,21 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 	const ActionSection = (
 		<div className={classes.actionSection}>
 			<div className={classes.controls}>
-				<IconButton aria-label="follow">
-					<PersonAddIcon className={classes.follow} />
-				</IconButton>
-				<IconButton aria-label="block">
-					<BlockIcon color="error" />
-				</IconButton>
-				<IconButton aria-label="share-profile">
-					<ShareIcon style={{ color: "blue" }} />
-				</IconButton>
+				<Tooltip title="Follow" aria-label="follow">
+					<IconButton aria-label="follow">
+						<PersonAddIcon className={classes.follow} />
+					</IconButton>
+				</Tooltip>
+				<Tooltip title="Block" aria-label="block">
+					<IconButton aria-label="block">
+						<BlockIcon color="error" />
+					</IconButton>
+				</Tooltip>
+				<Tooltip title="Share" aria-label="share">
+					<IconButton aria-label="share-profile">
+						<ShareIcon style={{ color: "blue" }} />
+					</IconButton>
+				</Tooltip>
 			</div>
 			{minUser!.role !== 3 && me!.role >= 2 ? ModSection : null}
 		</div>

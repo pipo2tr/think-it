@@ -1,21 +1,15 @@
 import { gql } from "@apollo/client";
-import Avatar from "@material-ui/core/Avatar";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import CreateIcon from "@material-ui/icons/Create";
-import LoadingButton from "@material-ui/lab/LoadingButton";
 import { useFormik } from "formik";
 import React, { FC } from "react";
-import { useUpdatePostMutation } from "../../generated/graphql";
+import { PostFragFragment, useUpdatePostMutation } from "../../generated/graphql";
 import { useModalFormStyle } from "../../hooks/useModalFormStyle";
-import { PostsType } from "../../utils/PostsType";
 import FormButton from "../Form/FormButton";
 import FormHeader from "../Form/FormHeader";
 import InputField from "../Form/InputField";
 
 interface EditPostProps {
-	post: PostsType;
+	post: PostFragFragment;
 	handleClose: () => void;
 }
 

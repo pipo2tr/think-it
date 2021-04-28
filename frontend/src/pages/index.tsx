@@ -3,10 +3,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import PostLayout from "../components/Layout/PostLayout";
 import PostCards from "../components/PostCard/PostCards";
 import BackDrop from "../components/Utils/BackDrop";
-import { usePostsQuery } from "../generated/graphql";
+import { MinUserFragment, useMeQuery, usePostsQuery } from "../generated/graphql";
 import { withApollo } from "../utils/withApollo";
 
 const Home = () => {
+	const { data: meData } = useMeQuery();
+
 	const { data, fetchMore } = usePostsQuery({
 		variables: {
 			limit: 30,
@@ -43,7 +45,7 @@ const Home = () => {
 					}
 				>
 					{data?.posts?.posts?.map((post) => (
-						<PostCards post={post} key={post.id} />
+						<PostCards post={post} meData={meData as MinUserFragment} key={post.id} />
 					))}
 				</InfiniteScroll>
 			) : null}

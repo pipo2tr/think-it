@@ -1,25 +1,23 @@
 import { Box } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Layout from "../../components/Layout/Layout";
+import TabContainer from "../../components/Tabs/TabContainer";
+import TabPanel from "../../components/Tabs/TabPanel";
 import PostAccordion from "../../components/UserProfile/PostAccordian";
 import ProfileCard from "../../components/UserProfile/ProfileCard";
+import ProfileCommentAccordian from "../../components/UserProfile/ProfileCommentAccordian";
 import BackDrop from "../../components/Utils/BackDrop";
-import TabPanel from "../../components/Tabs/TabPanel";
 import {
 	useCommentsByUserQuery,
 	useGetUserByIdQuery,
 	useMeQuery,
-	usePostsByUserQuery,
+	usePostsByUserQuery
 } from "../../generated/graphql";
 import { useIsAuth } from "../../hooks/useisAuth";
 import { withApollo } from "../../utils/withApollo";
-import TabContainer from "../../components/Tabs/TabContainer";
-import ProfileCommentAccordian from "../../components/UserProfile/ProfileCommentAccordian";
-import { MinUserType } from "../../utils/MinUserTyoe";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -90,8 +88,8 @@ const userProfile = () => {
 	const UserCard = (
 		<Box className={classes.hero}>
 			<ProfileCard
-				minUser={data?.getUserById?.user as MinUserType}
-				me={meData?.me as MinUserType}
+				minUser={data?.getUserById?.user! }
+				me={meData?.me!}
 			/>
 		</Box>
 	);

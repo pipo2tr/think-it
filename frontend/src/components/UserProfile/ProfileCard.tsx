@@ -13,7 +13,7 @@ import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import ShareIcon from "@material-ui/icons/Share";
 import StarsIcon from "@material-ui/icons/Stars";
 import React, { FC } from "react";
-import { MinUserType } from "../../utils/MinUserTyoe";
+import { MinUserFragment } from "../../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -43,8 +43,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ProfileCardType {
-	minUser: MinUserType;
-	me?: MinUserType
+	minUser: MinUserFragment;
+	me?: MinUserFragment
 }
 
 const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {

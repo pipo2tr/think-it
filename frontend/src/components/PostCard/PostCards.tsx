@@ -11,15 +11,14 @@ import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import ShareIcon from "@material-ui/icons/Share";
 import Link from "next/link";
 import React, { FC, useState } from "react";
-import { useMeQuery } from "../../generated/graphql";
-import { PostsType } from "../../utils/PostsType";
+import { MinUserFragment, PostFragFragment } from "../../generated/graphql";
+import AddCommentModal from "../CommentSection/AddCommentModal";
+import CommentButton from "../CommentSection/CommentButton";
 import EditPost from "../EditPost/EditPost";
 import PostModal from "../EditPost/PostModal";
+import CustomSnackbar from "../Utils/CustomSnackbar";
 import PostMenu from "./PostMenu";
 import VotingSection from "./VotingSection";
-import CommentButton from "../CommentSection/CommentButton";
-import AddCommentModal from "../CommentSection/AddCommentModal";
-import CustomSnackbar from "../Utils/CustomSnackbar";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -56,11 +55,11 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 interface PostCardInterface {
-	post: PostsType;
+	post: PostFragFragment;
+	meData: MinUserFragment
 }
-const PostCards: FC<PostCardInterface> = ({ post }) => {
+const PostCards: FC<PostCardInterface> = ({ post, meData }) => {
 	const classes = useStyles();
-	const { data: meData } = useMeQuery();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const [openModal, setOpen] = useState(false);
@@ -108,7 +107,7 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 					</Link>
 				}
 				action={
-					post.creatorId === meData?.me?.id ? (
+					post.creatorId === meData?.id ? (
 						<IconButton aria-label="settings" onClick={handleMenu}>
 							<MoreHorizIcon />
 						</IconButton>
@@ -133,7 +132,7 @@ const PostCards: FC<PostCardInterface> = ({ post }) => {
 					</Typography>
 				</Link>
 			</CardContent>
-			{meData?.me && meData?.me.role !== 0 ? (
+			{meData && meData?.role !== 0 ? (
 				<CardActions className={classes.action}>
 					<VotingSection
 						id={post.id}

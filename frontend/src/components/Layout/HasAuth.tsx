@@ -26,7 +26,6 @@ import {
 	MinUserFragment,
 	useDeleteMeMutation,
 	useLogoutMutation,
-	useMeQuery,
 } from "../../generated/graphql";
 import CreatePost from "../EditPost/CreatePost";
 import PostModal from "../EditPost/PostModal";
@@ -57,12 +56,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface HasAuthMobileProps {
 	handleMobileMenuClose?: () => void;
-	meData: MinUserFragment
+	meData: MinUserFragment;
 }
 
 export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 	handleMobileMenuClose,
-	meData
+	meData,
 }) => {
 	const classes = useStyles();
 	const [deleteMe] = useDeleteMeMutation();
@@ -150,12 +149,14 @@ export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 			</ListItem>
 			<Collapse in={open} timeout="auto" unmountOnExit>
 				<List component="div" disablePadding>
-					<ListItem button className={classes.nested}>
-						<ListItemIcon>
-							<AssignmentIndIcon />
-						</ListItemIcon>
-						<ListItemText primary="View Profile" />
-					</ListItem>
+					<Link href="/user/[id]" as={`/user/${meData?.id}`}>
+						<ListItem button className={classes.nested}>
+							<ListItemIcon>
+								<AssignmentIndIcon />
+							</ListItemIcon>
+							<ListItemText primary="View Profile" />
+						</ListItem>
+					</Link>
 					<ListItem
 						button
 						className={classes.nested}

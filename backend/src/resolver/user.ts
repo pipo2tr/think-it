@@ -354,86 +354,86 @@ export class UserResolver {
 		return { user: banned.raw[0] };
 	}
 
-	// Change user role
-	@Mutation(() => UserResponse)
-	@UseMiddleware(isAuthenticated)
-	@UseMiddleware(isOwner)
-	async makeAdmin(@Arg("id") id: number): Promise<UserResponse> {
-		const user = await User.findOne(id);
+	// // Change user role
+	// @Mutation(() => UserResponse)
+	// @UseMiddleware(isAuthenticated)
+	// @UseMiddleware(isOwner)
+	// async makeAdmin(@Arg("id") id: number): Promise<UserResponse> {
+	// 	const user = await User.findOne(id);
 
-		if (!user) {
-			return {
-				errors: [
-					{
-						field: "user",
-						message: "user doesn't exist",
-					},
-				],
-			};
-		} else if (user.role === Role.ADMIN || user.role === Role.OWNER) {
-			return {
-				errors: [
-					{
-						field: "role",
-						message:
-							"the following user is already an admin or owner",
-					},
-				],
-			};
-		}
+	// 	if (!user) {
+	// 		return {
+	// 			errors: [
+	// 				{
+	// 					field: "user",
+	// 					message: "user doesn't exist",
+	// 				},
+	// 			],
+	// 		};
+	// 	} else if (user.role === Role.ADMIN || user.role === Role.OWNER) {
+	// 		return {
+	// 			errors: [
+	// 				{
+	// 					field: "role",
+	// 					message:
+	// 						"the following user is already an admin or owner",
+	// 				},
+	// 			],
+	// 		};
+	// 	}
 
-		const roled = await getConnection()
-			.createQueryBuilder()
-			.update(User)
-			.set({ role: Role.ADMIN })
-			.where("id = :id", {
-				id,
-			})
-			.returning("*")
-			.execute();
+	// 	const roled = await getConnection()
+	// 		.createQueryBuilder()
+	// 		.update(User)
+	// 		.set({ role: Role.ADMIN })
+	// 		.where("id = :id", {
+	// 			id,
+	// 		})
+	// 		.returning("*")
+	// 		.execute();
 
-		return { user: roled.raw[0] };
-	}
+	// 	return { user: roled.raw[0] };
+	// }
 
-	@Mutation(() => UserResponse)
-	@UseMiddleware(isAuthenticated)
-	@UseMiddleware(isOwner)
-	async makeOwner(@Arg("id") id: number): Promise<UserResponse> {
-		const user = await User.findOne(id);
+	// @Mutation(() => UserResponse)
+	// @UseMiddleware(isAuthenticated)
+	// @UseMiddleware(isOwner)
+	// async makeOwner(@Arg("id") id: number): Promise<UserResponse> {
+	// 	const user = await User.findOne(id);
 
-		if (!user) {
-			return {
-				errors: [
-					{
-						field: "user",
-						message: "user doesn't exist",
-					},
-				],
-			};
-		} else if (user.role === Role.OWNER) {
-			return {
-				errors: [
-					{
-						field: "role",
-						message:
-							"the following user is already an admin or owner",
-					},
-				],
-			};
-		}
+	// 	if (!user) {
+	// 		return {
+	// 			errors: [
+	// 				{
+	// 					field: "user",
+	// 					message: "user doesn't exist",
+	// 				},
+	// 			],
+	// 		};
+	// 	} else if (user.role === Role.OWNER) {
+	// 		return {
+	// 			errors: [
+	// 				{
+	// 					field: "role",
+	// 					message:
+	// 						"the following user is already an admin or owner",
+	// 				},
+	// 			],
+	// 		};
+	// 	}
 
-		const roled = await getConnection()
-			.createQueryBuilder()
-			.update(User)
-			.set({ role: Role.OWNER })
-			.where("id = :id", {
-				id,
-			})
-			.returning("*")
-			.execute();
+	// 	const roled = await getConnection()
+	// 		.createQueryBuilder()
+	// 		.update(User)
+	// 		.set({ role: Role.OWNER })
+	// 		.where("id = :id", {
+	// 			id,
+	// 		})
+	// 		.returning("*")
+	// 		.execute();
 
-		return { user: roled.raw[0] };
-	}
+	// 	return { user: roled.raw[0] };
+	// }
 
 	// Delete user, can only be performed by Owner
 	@Mutation(() => Boolean)

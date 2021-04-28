@@ -53,6 +53,10 @@ interface ProfileCardType {
 const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 	const classes = useStyles();
 
+	const copyToClipBoard = (id: number) => {
+		navigator.clipboard.writeText(`http://localhost:3000/user/${id}`);
+	};
+
 	const ModSection = (
 		<div className={classes.controls}>
 			{minUser?.role === 0 ? (
@@ -78,7 +82,7 @@ const ProfileCard: FC<ProfileCardType> = ({ minUser, me }) => {
 					</IconButton>
 				</Tooltip>
 				<Tooltip title="Share" aria-label="share">
-					<IconButton aria-label="share-profile">
+					<IconButton aria-label="share-profile" onClick={()=>copyToClipBoard(minUser?.id)}>
 						<ShareIcon style={{ color: "blue" }} />
 					</IconButton>
 				</Tooltip>

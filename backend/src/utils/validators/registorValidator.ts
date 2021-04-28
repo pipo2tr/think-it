@@ -1,13 +1,13 @@
 import { UserRegisterType } from "../ResolverTypes/UserRegisterType";
-import { pwdRegex, emailRegex } from "./regex";
+import { pwdRegex, emailRegex, usernameRegex } from "./regex";
 
 export const registerValidator = (input: UserRegisterType) => {
-	if (input.username.length < 3 || input.username.includes("@")) {
+	if (!usernameRegex.test(input.username)) {
 		return [
 			{
 				field: "username",
 				message:
-					"Username must be atleast 3 character long and shouldn't have an @ character",
+					"Username must be between 3 and 16 characters long and shouldn't have any special characters",
 			},
 		];
 	} else if (!emailRegex.test(input.email)) {

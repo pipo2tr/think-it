@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface PostCardInterface {
 	post: PostFragFragment;
-	meData: MinUserFragment
+	meData: MinUserFragment;
 }
 const PostCards: FC<PostCardInterface> = ({ post, meData }) => {
 	const classes = useStyles();
@@ -76,7 +76,6 @@ const PostCards: FC<PostCardInterface> = ({ post, meData }) => {
 	const handleClose = () => {
 		setAnchorEl(null);
 		setOpen(false);
-		
 	};
 	const handleCloseCommentModal = () => {
 		setOpenCommentModal(false);
@@ -146,7 +145,7 @@ const PostCards: FC<PostCardInterface> = ({ post, meData }) => {
 							copyToClipBoard(post.id);
 						}}
 					>
-						<ShareIcon />
+						<ShareIcon style={{ color: "blue" }} />
 					</IconButton>
 					<CommentButton
 						points={post.numComments}
@@ -173,7 +172,12 @@ const PostCards: FC<PostCardInterface> = ({ post, meData }) => {
 					handleClose={handleCloseCommentModal}
 				/>
 			</PostModal>
-			<CustomSnackbar openSnackBar={openSnackBar} text="Copied post link to clipboard" type="success" handleclose={handleCloseSnackbar }/>
+			<CustomSnackbar
+				openSnackBar={openSnackBar}
+				text="Copied post link to clipboard"
+				type="success"
+				handleclose={handleCloseSnackbar}
+			/>
 		</Card>
 	);
 };

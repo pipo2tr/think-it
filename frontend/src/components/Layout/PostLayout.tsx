@@ -48,7 +48,7 @@ const PostLayout: FC = ({ children }) => {
 					{data?.me ? (
 						<Grid item xs={3} className={classes.grid2}>
 							<Paper className={classes.ig}>
-								<HasAuthMobile/>
+							<HasAuthMobile meData={data?.me!}/>
 							</Paper>
 						</Grid>
 					) : null}

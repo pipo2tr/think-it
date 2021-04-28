@@ -108,6 +108,7 @@ export default function NavBar() {
 						{data?.me?.username ? (
 							<HasAuthMobile
 								handleMobileMenuClose={handleMobileMenuClose}
+							meData={data.me!}
 							/>
 						) : (
 							<NotAuthMobile />

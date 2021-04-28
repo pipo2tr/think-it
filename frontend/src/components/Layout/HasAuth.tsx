@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useState } from "react";
 import {
+	MinUserFragment,
 	useDeleteMeMutation,
 	useLogoutMutation,
 	useMeQuery,
@@ -56,16 +57,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface HasAuthMobileProps {
 	handleMobileMenuClose?: () => void;
+	meData: MinUserFragment
 }
 
 export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 	handleMobileMenuClose,
+	meData
 }) => {
 	const classes = useStyles();
 	const [deleteMe] = useDeleteMeMutation();
 	const [open, setOpen] = useState(false);
 	const [openDailoge, setOpenDailoge] = useState(false);
-	const { data } = useMeQuery();
 	const [logout] = useLogoutMutation();
 	const [openModal, setOpenModal] = useState(false);
 	const router = useRouter();
@@ -98,7 +100,7 @@ export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 		setOpenModal(true);
 	};
 
-	if (!data?.me?.username) {
+	if (!meData?.username) {
 		return null;
 	}
 	return (
@@ -140,10 +142,10 @@ export const HasAuthMobile: FC<HasAuthMobileProps> = ({
 			<ListItem button onClick={handleClick}>
 				<ListItemIcon>
 					<Avatar aria-label="user" className={classes.avatar}>
-						{data?.me?.username[0]}
+						{meData?.username[0]}
 					</Avatar>
 				</ListItemIcon>
-				<ListItemText primary={data?.me?.username} />
+				<ListItemText primary={meData?.username} />
 				{open ? <ExpandLess /> : <ExpandMore />}
 			</ListItem>
 			<Collapse in={open} timeout="auto" unmountOnExit>

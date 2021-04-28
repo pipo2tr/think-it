@@ -20,25 +20,21 @@
 
 Install the dependencies and devDependencies and start the server.
 
-For the Api
+For the backend
 
 ```sh
 cd backend
 npm i
-npm run dev
 ```
 
-The dev server will start at [http://localhost/4000/graphql](http://localhost/4000/graphql)
-
-For Nextjs frontend.
+For the frontend.
 
 ```sh
 cd frontend
 npm i
-npm run dev
 ```
 
-Watch it running at [http://localhost:3000](http://localhost:3000)
+
 
 For production build (Next js)
 
@@ -46,3 +42,5 @@ For production build (Next js)
 npm run build
 npm run start
 ```
+
+### Readme file in the following directories have more info about how to run the app.

@@ -54,7 +54,7 @@ export class UserResolver {
 	}
 
 	@Query(() => UserResponse)
-	async getUserById(@Arg("id", ()=> Int) id: number): Promise<UserResponse> {
+	async getUserById(@Arg("id", () => Int) id: number): Promise<UserResponse> {
 		const user = await User.findOne({ where: { id } });
 
 		if (!user) {
@@ -266,7 +266,7 @@ export class UserResolver {
 	@Mutation(() => UserResponse)
 	@UseMiddleware(isAuthenticated)
 	@UseMiddleware(isAdmin)
-	async ban(@Arg("id") id: number): Promise<UserResponse> {
+	async ban(@Arg("id", () => Int) id: number): Promise<UserResponse> {
 		const user = await User.findOne(id);
 
 		if (!user) {
@@ -317,7 +317,7 @@ export class UserResolver {
 	@UseMiddleware(isAuthenticated)
 	@UseMiddleware(isAdmin)
 	@UseMiddleware(isOwner)
-	async unban(@Arg("id") id: number): Promise<UserResponse> {
+	async unban(@Arg("id", () => Int) id: number): Promise<UserResponse> {
 		const user = await User.findOne(id);
 
 		if (!user) {
@@ -439,7 +439,7 @@ export class UserResolver {
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuthenticated)
 	@UseMiddleware(isOwner)
-	async admin_deleteUser(@Arg("id") id: number): Promise<Boolean> {
+	async adminDeleteUser(@Arg("id", () => Int) id: number): Promise<Boolean> {
 		const user = await User.findOne(id);
 
 		if (!user) {

@@ -1,0 +1,12 @@
+mutation Ban($id: Int!) {
+	ban(id: $id) {
+		user {
+			id
+			username
+		}
+		errors {
+			field
+			message
+		}
+	}
+}

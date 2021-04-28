@@ -1,0 +1,11 @@
+mutation Unban($id: Int!) {
+	unban(id: $id) {
+		user {
+			id
+		}
+		errors {
+			field
+			message
+		}
+	}
+}

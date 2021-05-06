@@ -20,8 +20,16 @@
 
 Install the dependencies and devDependencies and start the server.
 
-For the backend
+Remember to create a thinkit database in PostgresQL 
 
+Connect to the PostgresQL console
+```psql postgres```
+Create a new database
+```CREATE DATABASE thinkit;```
+Quit the console
+```\q```
+
+For the backend
 ```sh
 cd backend
 npm i

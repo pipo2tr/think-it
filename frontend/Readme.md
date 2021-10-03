@@ -1,4 +1,4 @@
-# think-it-backend
+# think-it-frontend
 
 ### This is the Next Js frontend using Material UI _(expect bugs)_
 
